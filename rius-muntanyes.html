@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curs Ràpid: Rius i Muntanyes de Catalunya (amb Mapes)</title>
+<style>
+  :root {
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --mountain: #15803d;
+    --mountain-bg: #dcfce7;
+    --river-bg: #e0f2fe;
+    --text: #1e293b;
+    --muted: #64748b;
+    --ok: #16a34a;
+    --err: #dc2626;
+    --border: #cbd5e1;
+  }
+  * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--text); padding: 14px; display: flex; justify-content: center; }
+  .app { width: 100%; max-width: 720px; }
+  .top-nav { display: flex; justify-content: flex-start; margin-bottom: 10px; }
+  .home-link { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #334155; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 7px 13px; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: 0.15s; }
+  .home-link:hover { border-color: var(--primary); color: var(--primary-dark); }
+  header { text-align: center; margin-bottom: 14px; }
+  header h1 { margin: 0; font-size: 1.45rem; color: #0f172a; }
+  header p { margin: 4px 0 0; color: var(--muted); font-size: 0.92rem; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab { flex: 1; padding: 12px 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.92rem; cursor: pointer; background: #e2e8f0; color: #475569; transition: 0.2s; }
+  .tab.active { background: var(--primary); color: #fff; box-shadow: 0 2px 6px rgba(2,132,199,0.3); }
+
+  .card { background: var(--card); border-radius: 14px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
+  h2 { margin: 0 0 12px; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; }
+  
+  .block { border-left: 4px solid var(--primary); background: var(--river-bg); padding: 12px; border-radius: 0 10px 10px 0; margin-bottom: 12px; }
+  .block.mtn { border-left-color: var(--mountain); background: var(--mountain-bg); }
+  .block h3 { margin: 0 0 6px; font-size: 0.98rem; }
+  .block p { margin: 0 0 6px; font-size: 0.88rem; line-height: 1.4; }
+  .trick { font-size: 0.83rem; background: rgba(255,255,255,0.8); padding: 5px 9px; border-radius: 6px; display: inline-block; font-weight: 600; }
+
+  /* MAPES SVG */
+  .map-wrapper { background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; padding: 10px; margin: 12px 0; text-align: center; }
+  .map-svg { width: 100%; max-width: 440px; height: auto; display: block; margin: 0 auto; touch-action: manipulation; }
+  .cat-land { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 2; }
+  .cat-sea { fill: #e0f2fe; }
+  
+  /* Rius interactius */
+  .river-line { fill: none; stroke: #0284c7; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; transition: 0.2s; }
+  .river-hit { fill: none; stroke: transparent; stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; }
+  .river-group:hover .river-line { stroke: #f59e0b; stroke-width: 6; }
+  .river-group.active .river-line { stroke: #f59e0b; stroke-width: 6.5; }
+  .river-group.correct .river-line { stroke: #16a34a; stroke-width: 7; }
+  .river-group.wrong .river-line { stroke: #dc2626; stroke-width: 7; }
+
+  /* Muntanyes interactives */
+  .mtn-zone { stroke-width: 2; cursor: pointer; transition: 0.2s; opacity: 0.82; }
+  .mtn-zone:hover { opacity: 1; stroke: #0f172a; stroke-width: 3; }
+  .mtn-zone.active { opacity: 1; stroke: #f59e0b; stroke-width: 3.5; }
+  .mtn-zone.correct { fill: #16a34a !important; opacity: 0.95; stroke: #14532d; stroke-width: 3; }
+  .mtn-zone.wrong { fill: #dc2626 !important; opacity: 0.95; stroke: #7f1d1d; stroke-width: 3; }
+
+  .map-info-box { margin-top: 8px; padding: 10px; border-radius: 8px; background: #fff; border: 1px solid var(--border); font-size: 0.9rem; font-weight: 600; min-height: 44px; display: flex; align-items: center; justify-content: center; color: #0f172a; }
+
+  /* MODES DE JOC */
+  .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+  @media (min-width: 540px) { .mode-grid { grid-template-columns: repeat(3, 1fr); } }
+  .mode-btn { padding: 11px 8px; border: 2px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer; font-weight: 700; font-size: 0.88rem; text-align: center; transition: 0.15s; }
+  .mode-btn:hover { border-color: var(--primary); background: #f8fafc; }
+  .mode-btn.selected { border-color: var(--primary); background: var(--river-bg); color: var(--primary-dark); }
+
+  .stats { display: flex; justify-content: space-between; background: #f8fafc; padding: 9px 12px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; margin-bottom: 12px; border: 1px solid var(--border); }
+  .badge-type { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; margin-bottom: 6px; }
+  .badge-riu { background: var(--river-bg); color: var(--primary-dark); }
+  .badge-muntanya { background: var(--mountain-bg); color: var(--mountain); }
+  .badge-mapa { background: #fef3c7; color: #b45309; }
+
+  .question-text { font-size: 1.12rem; font-weight: 700; margin: 6px 0 14px; line-height: 1.35; }
+  .options { display: grid; gap: 9px; }
+  .opt-btn { width: 100%; text-align: left; padding: 13px; border: 2px solid var(--border); border-radius: 10px; background: #fff; font-size: 0.98rem; font-weight: 600; cursor: pointer; transition: 0.15s; }
+  .opt-btn:hover:not(:disabled) { border-color: var(--primary); background: #f1f5f9; }
+  .opt-btn.correct { background: #dcfce7; border-color: var(--ok); color: #14532d; }
+  .opt-btn.wrong { background: #fee2e2; border-color: var(--err); color: #7f1d1d; }
+  .opt-btn:disabled { cursor: default; }
+
+  .feedback { margin-top: 12px; padding: 11px; border-radius: 10px; font-size: 0.9rem; line-height: 1.4; display: none; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+  .feedback.err { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+
+  .next-btn { width: 100%; margin-top: 12px; padding: 13px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; display: none; }
+  .next-btn.show { display: block; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="top-nav">
+    <a href="index.html" class="home-link">← Tots els cursos</a>
+  </nav>
+  <header>
+    <h1>🏔️ Rius i Muntanyes de Catalunya 🌊</h1>
+    <p>Guia visual amb mapes interactius i exercicis per situar-los</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('estudi', this)">📖 1. Guia i Mapes</button>
+    <button class="tab" onclick="switchTab('joc', this)">🎮 2. Practicar i Situar</button>
+  </div>
+
+  <!-- PESTANYA 1: ESTUDI + MAPES INTERACTIUS -->
+  <div id="tab-estudi">
+    <div class="card">
+      <h2>🌊 Mapa i Guia dels Rius</h2>
+      <p style="font-size:0.88rem; color:var(--muted); margin-top:0;">Toca qualsevol línia blava del mapa per veure quin riu és:</p>
+      
+      <div class="map-wrapper">
+        <div id="study-river-map"></div>
+        <div id="study-river-info" class="map-info-box">👆 Toca un riu al mapa per explorar-lo</div>
+      </div>
+
+      <div class="block">
+        <h3>1. La Conca de l'Ebre (Els gegants de l'interior)</h3>
+        <p><strong>Ebre:</strong> El més cabalós. Travessa les Terres de l'Ebre fins al Delta.<br>
+        <strong>Afluents principals:</strong> <strong>Segre</strong> (el més llarg de Catalunya) i els dos <em>Noguera</em> que hi desemboquen: <strong>Noguera Pallaresa</strong> i <strong>Noguera Ribagorçana</strong>.</p>
+        <span class="trick">💡 Truc: Els dos Noguera baixen paral·lels cap al Segre, i el Segre va a l'Ebre.</span>
+      </div>
+      <div class="block">
+        <h3>2. Rius Pirinencs que van al Mediterrani (De nord a sud)</h3>
+        <p>Neixen als Pirineus/Prepirineus i van directes al mar: <strong>Muga</strong>, <strong>Fluvià</strong>, <strong>Ter</strong>, <strong>Tordera</strong>, <strong>Besòs</strong> i <strong>Llobregat</strong>.</p>
+        <span class="trick">💡 Truc Llobregat: Té dos afluents clau: el Cardener (Cardona/Manresa) i l'Anoia (Igualada).</span>
+      </div>
+      <div class="block">
+        <h3>3. Rius curts del Sud (Conques internes)</h3>
+        <p>Neixen a les serralades costaneres i fan un camí curt fins al mar: <strong>Foix</strong>, <strong>Gaià</strong>, <strong>Francolí</strong> (Tarragona) i <strong>Sénia</strong> (fa frontera al sud).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⛰️ Mapa i Guia del Relleu (Muntanyes)</h2>
+      <p style="font-size:0.88rem; color:var(--muted); margin-top:0;">Toca cada franja de color per veure les serralades i cims principals:</p>
+
+      <div class="map-wrapper">
+        <div id="study-mtn-map"></div>
+        <div id="study-mtn-info" class="map-info-box">👆 Toca una zona del mapa per veure el relleu</div>
+      </div>
+
+      <div class="block mtn">
+        <h3>1. Al Nord: Pirineus i Prepirineu</h3>
+        <p><strong>Pirineus (els més alts):</strong> Pica d'Estats (3.143 m, el sostre de Catalunya), Puigmal, Canigó.<br>
+        <strong>Prepirineu (just a sota):</strong> Serra del Cadí, Pedraforca (forma d'U) i Serra del Montsec.</p>
+      </div>
+      <div class="block mtn">
+        <h3>2. Al Mig: La Depressió Central</h3>
+        <p>És una gran zona plana envoltada de muntanyes: <strong>Plana de Vic</strong>, <strong>Pla de Bages</strong> i <strong>Pla d'Urgell</strong>.</p>
+      </div>
+      <div class="block mtn">
+        <h3>3. Paral·lels al Mar: Dues fileres de muntanyes</h3>
+        <p><strong>Serralada Prelitoral (més endins i més alta):</strong> Montseny (Turó de l'Home), Montserrat, Muntanyes de Prades, Serra del Montsant i Ports de Tortosa-Beseit.<br>
+        <strong>Serralada Litoral (tocant a la costa):</strong> Montnegre, Serra de Collserola (Tibidabo) i Massís del Garraf.</p>
+        <span class="trick">💡 Truc: "Pre-litoral" = abans d'arribar al litoral (més a l'interior i més alta).</span>
+      </div>
+      <div class="block mtn">
+        <h3>4. El Pont de l'Est: Serralada Transversal</h3>
+        <p>Uneix els Pirineus amb les serralades de la costa. Hi ha la <strong>Zona Volcànica de la Garrotxa</strong> (volcà Croscat, Santa Margarida) i el Puigsacalm.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PESTANYA 2: JOC I EXERCICIS DE MAPA -->
+  <div id="tab-joc" class="hidden">
+    <div class="mode-grid">
+      <button class="mode-btn selected" onclick="setMode('mapa', this)">🗺️ Situar al Mapa</button>
+      <button class="mode-btn" onclick="setMode('mixt', this)">🔥 Tot Barrejat</button>
+      <button class="mode-btn" onclick="setMode('rius', this)">🌊 Test Rius</button>
+      <button class="mode-btn" onclick="setMode('muntanyes', this)">⛰️ Test Muntanyes</button>
+      <button class="mode-btn" onclick="setMode('cims', this)">📍 Cims i Afluents</button>
+    </div>
+
+    <div class="card">
+      <div class="stats">
+        <span>Pregunta: <span id="q-num">1</span>/<span id="q-total">15</span></span>
+        <span>Encerts: <span id="score">0</span></span>
+        <span>Ratxa: 🔥<span id="streak">0</span></span>
+      </div>
+
+      <span id="q-badge" class="badge-type badge-mapa">Mapa</span>
+      <div id="q-text" class="question-text">Carregant...</div>
+
+      <!-- Contenidor per al mapa interactiu de pregunta -->
+      <div id="quiz-map-area" class="map-wrapper hidden"></div>
+
+      <!-- Contenidor per a opcions de test -->
+      <div id="options" class="options"></div>
+
+      <div id="feedback" class="feedback"></div>
+      <button id="next-btn" class="next-btn" onclick="nextQuestion()">Següent pregunta ➡️</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// DADES GEOGRÀFIQUES PER ALS MAPES VECTORIALS (SVG)
+const catOutline = "M 35,62 L 85,55 L 145,45 L 210,58 L 285,52 L 348,48 L 368,68 L 352,95 L 362,125 L 330,155 L 285,188 L 235,218 L 185,245 L 132,262 L 105,292 L 125,305 L 112,315 L 82,318 L 65,292 L 58,245 L 48,185 L 42,115 Z";
+
+const riversData = [
+  { id: 'ebre', name: 'Riu Ebre', d: 'M 65,260 Q 95,275 100,295 L 120,304', info: 'El més cabalós de Catalunya. Passa per Tortosa i forma el Delta de l’Ebre.' },
+  { id: 'segre', name: 'Riu Segre', d: 'M 195,62 Q 155,105 120,155 Q 92,195 66,225', info: 'El riu més llarg de Catalunya. Passa per la Seu d’Urgell, Balaguer i Lleida.' },
+  { id: 'noguera_p', name: 'Noguera Pallaresa', d: 'M 118,54 Q 112,105 118,153', info: 'Baixa pel Pallars (Sort, Tremp) fins a desembocar al riu Segre.' },
+  { id: 'noguera_r', name: 'Noguera Ribagorçana', d: 'M 75,58 Q 78,125 88,188', info: 'Fa frontera amb Aragó, passa pel congost de Mont-rebei i va al Segre.' },
+  { id: 'llobregat', name: 'Riu Llobregat', d: 'M 218,82 Q 212,140 228,185 L 245,212', info: 'Neix al Cadí, travessa el centre de Catalunya i desemboca al sud de Barcelona.' },
+  { id: 'cardener', name: 'Riu Cardener', d: 'M 185,95 Q 195,135 216,158', info: 'Afluent principal del Llobregat per l’esquerra; passa per Cardona i Manresa.' },
+  { id: 'anoia', name: 'Riu Anoia', d: 'M 178,175 Q 202,182 227,186', info: 'Afluent del Llobregat per la dreta; passa per Igualada i Martorell.' },
+  { id: 'besos', name: 'Riu Besòs', d: 'M 254,168 L 262,198', info: 'Riu curt que passa pel Vallès i desemboca al nord de Barcelona.' },
+  { id: 'tordera', name: 'Riu Tordera', d: 'M 268,145 Q 285,162 296,178', info: 'Neix al Montseny i desemboca entre Blanes i Malgrat de Mar.' },
+  { id: 'ter', name: 'Riu Ter', d: 'M 265,68 Q 275,112 315,115 L 354,116', info: 'Neix a Ulldeter, fa un gir a Osona, passa per Girona i desemboca a l’Estartit.' },
+  { id: 'fluvia', name: 'Riu Fluvià', d: 'M 285,78 Q 318,86 353,90', info: 'Passa per Olot (Garrotxa) i desemboca al golf de Roses.' },
+  { id: 'muga', name: 'Riu Muga', d: 'M 305,54 Q 332,65 358,72', info: 'El riu més al nord de la costa catalana; travessa l’Alt Empordà.' },
+  { id: 'francoli', name: 'Riu Francolí', d: 'M 152,202 Q 168,225 178,246', info: 'Neix a les muntanyes de Prades i desemboca al port de Tarragona.' },
+  { id: 'gaia', name: 'Riu Gaià', d: 'M 172,198 Q 186,220 196,238', info: 'Passa entre el Francolí i el Foix, desembocant a Altafulla.' },
+  { id: 'foix', name: 'Riu Foix', d: 'M 196,196 Q 208,212 216,226', info: 'Travessa el Penedès i desemboca a Cubelles.' },
+  { id: 'senia', name: 'Riu de la Sénia', d: 'M 64,295 L 84,316', info: 'Fa de frontera natural al sud entre Catalunya i el País Valencià.' }
+];
+
+const mountainsData = [
+  { id: 'pirineus', name: 'Pirineus', fill: '#15803d', stroke: '#14532d', d: 'M 42,62 L 145,45 L 285,52 L 348,48 L 342,74 L 265,76 L 145,72 L 42,84 Z', info: 'Serralada més alta al nord. Cims: Pica d’Estats (3.143 m), Puigmal i Canigó.' },
+  { id: 'prepirineu', name: 'Prepirineu', fill: '#22c55e', stroke: '#15803d', d: 'M 42,84 L 145,72 L 265,76 L 260,104 L 145,102 L 44,114 Z', info: 'Just al sud dels Pirineus. Inclou la Serra del Cadí, el Pedraforca i el Montsec.' },
+  { id: 'transversal', name: 'Serralada Transversal', fill: '#84cc16', stroke: '#4d7c0f', d: 'M 262,76 L 335,75 L 325,124 L 258,124 Z', info: 'Connecta els Pirineus amb la costa. Inclou la Zona Volcànica de la Garrotxa.' },
+  { id: 'depressio', name: 'Depressió Central', fill: '#fde047', stroke: '#ca8a04', d: 'M 45,115 L 145,103 L 258,105 L 256,148 L 165,182 L 75,215 L 54,185 Z', info: 'Gran zona plana interior: Plana de Vic, Pla de Bages i Pla d’Urgell.' },
+  { id: 'prelitoral', name: 'Serralada Prelitoral', fill: '#ea580c', stroke: '#9a3412', d: 'M 65,245 L 155,185 L 256,142 L 285,148 L 265,172 L 165,212 L 88,282 L 64,268 Z', info: 'Paral·lela al mar però més endins i alta: Montseny, Montserrat, Prades i Els Ports.' },
+  { id: 'litoral', name: 'Serralada Litoral', fill: '#f97316', stroke: '#c2410c', d: 'M 192,232 L 268,176 L 315,155 L 325,164 L 275,194 L 204,242 Z', info: 'Tocant a la costa: Montnegre, Serra de Collserola (Tibidabo) i Massís del Garraf.' }
+];
+
+// GENERADOR DE MAPES SVG
+function buildRiverMapSVG(mode, onSelectCallback) {
+  let svg = `<svg class="map-svg" viewBox="0 0 390 335">
+    <rect x="0" y="0" width="390" height="335" rx="10" class="cat-sea"/>
+    <path d="M 0,0 L 390,0 L 390,55 L 352,95 L 362,125 L 330,155 L 285,188 L 235,218 L 185,245 L 132,262 L 105,292 L 125,305 L 112,315 L 82,318 L 0,335 Z" fill="#e2e8f0"/>
+    <path d="${catOutline}" class="cat-land"/>`;
+
+  riversData.forEach(r => {
+    svg += `<g class="river-group" data-id="${r.id}" onclick="${onSelectCallback}('${r.id}', this)">
+      <path d="${r.d}" class="river-line"/>
+      <path d="${r.d}" class="river-hit"/>
+    </g>`;
+  });
+
+  svg += `<text x="315" y="250" fill="#0369a1" font-size="13" font-weight="bold" opacity="0.7">Mar Mediterrània</text></svg>`;
+  return svg;
+}
+
+function buildMountainMapSVG(mode, onSelectCallback) {
+  let svg = `<svg class="map-svg" viewBox="0 0 390 335">
+    <rect x="0" y="0" width="390" height="335" rx="10" class="cat-sea"/>
+    <path d="M 0,0 L 390,0 L 390,55 L 352,95 L 362,125 L 330,155 L 285,188 L 235,218 L 185,245 L 132,262 L 105,292 L 125,305 L 112,315 L 82,318 L 0,335 Z" fill="#e2e8f0"/>
+    <path d="${catOutline}" class="cat-land"/>`;
+
+  mountainsData.forEach(m => {
+    svg += `<path d="${m.d}" fill="${m.fill}" stroke="${m.stroke}" class="mtn-zone" data-id="${m.id}" onclick="${onSelectCallback}('${m.id}', this)"/>`;
+  });
+
+  svg += `<text x="315" y="250" fill="#0369a1" font-size="13" font-weight="bold" opacity="0.7">Mar Mediterrània</text></svg>`;
+  return svg;
+}
+
+// INICIALITZAR MAPES D'ESTUDI
+document.getElementById('study-river-map').innerHTML = buildRiverMapSVG('study', 'selectStudyRiver');
+document.getElementById('study-mtn-map').innerHTML = buildMountainMapSVG('study', 'selectStudyMountain');
+
+function selectStudyRiver(id, el) {
+  document.querySelectorAll('#study-river-map .river-group').forEach(g => g.classList.remove('active'));
+  el.classList.add('active');
+  const r = riversData.find(x => x.id === id);
+  document.getElementById('study-river-info').innerHTML = `🌊 <strong>${r.name}:</strong>&nbsp;${r.info}`;
+}
+
+function selectStudyMountain(id, el) {
+  document.querySelectorAll('#study-mtn-map .mtn-zone').forEach(z => z.classList.remove('active'));
+  el.classList.add('active');
+  const m = mountainsData.find(x => x.id === id);
+  document.getElementById('study-mtn-info').innerHTML = `⛰️ <strong>${m.name}:</strong>&nbsp;${m.info}`;
+}
+
+// BANC DE PREGUNTES (TEST + MAPA)
+const textBank = [
+  // RIUS
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin és el riu més llarg que neix i desemboca dins de Catalunya (afluent de l’Ebre)?', opts: ['El Segre', 'El Llobregat', 'El Ter', 'El Fluvià'], ans: 0, exp: 'El Segre neix a l’Alta Cerdanya, recorre Lleida i desemboca a l’Ebre (a Mequinensa).' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quins dos rius "Noguera" són afluents del riu Segre?', opts: ['Noguera Pallaresa i Noguera Ribagorçana', 'Noguera Cardener i Noguera Anoia', 'Noguera de Tor i Noguera del Ter', 'Noguera Muga i Noguera Gaià'], ans: 0, exp: 'La Noguera Pallaresa i la Noguera Ribagorçana baixen dels Pirineus cap al Segre.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin és el riu més cabalós de Catalunya i forma un gran delta al sud?', opts: ['L’Ebre', 'El Llobregat', 'El Ter', 'El Besòs'], ans: 0, exp: 'L’Ebre travessa les Terres de l’Ebre i desemboca al Mediterrani formant el Delta de l’Ebre.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quins són els dos principals afluents del riu Llobregat?', opts: ['Cardener i Anoia', 'Segre i Cinca', 'Onyar i Freser', 'Muga i Fluvià'], ans: 0, exp: 'El Cardener (pel nord) i l’Anoia (per l’oest) aboquen les seves aigües al Llobregat.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin riu passa per la ciutat de Girona (on se li uneix l’Onyar)?', opts: ['El Ter', 'La Tordera', 'El Francolí', 'El Foix'], ans: 0, exp: 'El Ter neix a Ulldeter (Pirineus), passa per Girona i desemboca a l’Estartit.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Ordena de nord a sud aquests rius que van directes al mar:', opts: ['Muga, Fluvià, Ter, Tordera', 'Ter, Muga, Tordera, Fluvià', 'Tordera, Ter, Fluvià, Muga', 'Fluvià, Muga, Tordera, Ter'], ans: 0, exp: 'De dalt (Alt Empordà) cap avall: Muga -> Fluvià -> Ter -> Tordera.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin riu desemboca a la ciutat de Tarragona?', opts: ['El Francolí', 'El Gaià', 'La Sénia', 'El Besòs'], ans: 0, exp: 'El riu Francolí neix a les muntanyes de Prades/Conca de Barberà i desemboca al port de Tarragona.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin riu fa de frontera natural a l’extrem sud entre Catalunya i el País Valencià?', opts: ['La Sénia', 'El Foix', 'El Cardener', 'La Muga'], ans: 0, exp: 'El riu de la Sénia marca el límit sud de Catalunya amb el País Valencià.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin riu passa just per sota del massís del Montseny i separa el Maresme de la Selva?', opts: ['La Tordera', 'El Segre', 'El Gaià', 'L’Anoia'], ans: 0, exp: 'La Tordera neix al Montseny i desemboca entre Blanes i Malgrat de Mar.' },
+  { type: 'test', cat: 'rius', tag: 'Rius', q: 'Quin riu passa pel nord de la ciutat de Barcelona (Santa Coloma / Sant Adrià)?', opts: ['El Besòs', 'El Llobregat', 'El Ter', 'El Foix'], ans: 0, exp: 'El Besòs limita Barcelona pel nord, mentre que el Llobregat ho fa pel sud.' },
+
+  // MUNTANYES
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'Quin és el cim més alt de Catalunya (3.143 m) i on es troba?', opts: ['Pica d’Estats (Pirineus)', 'Puigmal (Prepirineu)', 'Turó de l’Home (Montseny)', 'Sant Jeroni (Montserrat)'], ans: 0, exp: 'La Pica d’Estats (3.143 m) és al Pallars Sobirà, als Pirineus.' },
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'A quina gran unitat de relleu pertanyen la Serra del Cadí i el Pedraforca?', opts: ['Prepirineu', 'Serralada Litoral', 'Depressió Central', 'Serralada Transversal'], ans: 0, exp: 'El Cadí, el Pedraforca i el Montsec formen el Prepirineu (al sud dels Pirineus).' },
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'Quina diferència hi ha entre la Serralada Litoral i la Prelitoral?', opts: ['La Litoral toca a mar i la Prelitoral és més endins i més alta', 'La Litoral és més alta que els Pirineus', 'La Prelitoral està sota l’aigua', 'No hi ha cap diferència, són el mateix'], ans: 0, exp: 'La Litoral és a primera línia de costa (Collserola, Garraf) i la Prelitoral és paral·lela més a l’interior (Montseny, Montserrat).' },
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'A quina serralada pertanyen el Montseny i Montserrat?', opts: ['Serralada Prelitoral', 'Serralada Litoral', 'Pirineus', 'Depressió Central'], ans: 0, exp: 'Tots dos formen part de la Serralada Prelitoral, que s’estén paral·lela a la costa però a l’interior.' },
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'Quina serralada toca a mar i inclou Collserola (Tibidabo) i el Garraf?', opts: ['Serralada Litoral', 'Serralada Prelitoral', 'Prepirineu', 'Serralada Transversal'], ans: 0, exp: 'La Serralada Litoral ressegueix la costa: Montnegre, Corredor, Collserola i Garraf.' },
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'On es troba la Zona Volcànica de la Garrotxa (volcans Croscat i Santa Margarida)?', opts: ['Serralada Transversal', 'Depressió Central', 'Serralada Litoral', 'Delta de l’Ebre'], ans: 0, exp: 'La Serralada Transversal connecta els Pirineus amb la Serralada Prelitoral i té el relleu volcànic d’Olot.' },
+  { type: 'test', cat: 'muntanyes', tag: 'Muntanyes', q: 'Com s’anomena la gran zona plana del mig de Catalunya (Plana de Vic, Pla de Bages, Pla d’Urgell)?', opts: ['Depressió Central', 'Serralada Transversal', 'Prepirineu', 'Plana Litoral'], ans: 0, exp: 'La Depressió Central ocupa el centre de Catalunya entre el Prepirineu i la Serralada Prelitoral.' },
+
+  // CIMS I AFLUENTS
+  { type: 'test', cat: 'cims', tag: 'Cims i Afluents', q: 'Com es diu el cim més alt del massís del Montseny (1.706 m)?', opts: ['Turó de l’Home', 'Sant Jeroni', 'Tibidabo', 'Matagalls'], ans: 0, exp: 'El Turó de l’Home (1.706 m) és el sostre del Montseny.' },
+  { type: 'test', cat: 'cims', tag: 'Cims i Afluents', q: 'Quina muntanya té una forma d’U molt característica amb dos cims?', opts: ['El Pedraforca', 'Montserrat', 'El Puigmal', 'El Canigó'], ans: 0, exp: 'El Pedraforca (al Berguedà, Prepirineu) és famós per la seva silueta en forma de forca o U.' },
+  { type: 'test', cat: 'cims', tag: 'Cims i Afluents', q: 'Quin riu passa pel congost de Mont-rebei, tallant la Serra del Montsec?', opts: ['Noguera Ribagorçana', 'Ter', 'Llobregat', 'Francolí'], ans: 0, exp: 'La Noguera Ribagorçana fa frontera amb Aragó i travessa el congost de Mont-rebei.' },
+  { type: 'test', cat: 'cims', tag: 'Cims i Afluents', q: 'Quin massís muntanyós és al sud de tot, entre Catalunya, Aragó i el País Valencià?', opts: ['Els Ports (Ports de Tortosa-Beseit)', 'El Montnegre', 'La Serra del Cadí', 'El Garraf'], ans: 0, exp: 'Els Ports marquen l’extrem sud de la Serralada Prelitoral.' },
+  { type: 'test', cat: 'cims', tag: 'Cims i Afluents', q: 'Quin cim és el punt més alt de la muntanya de Montserrat?', opts: ['Sant Jeroni', 'Turó de l’Home', 'Tibidabo', 'Puigsacalm'], ans: 0, exp: 'Sant Jeroni (1.236 m) és el cim més elevat de Montserrat.' }
+];
+
+// PREGUNTES DE SITUAR AL MAPA
+const mapBank = [
+  ...riversData.filter(r => ['ebre','segre','noguera_p','noguera_r','llobregat','cardener','anoia','ter','fluvia','muga','francoli','tordera','besos'].includes(r.id)).map(r => ({
+    type: 'map', mapKind: 'river', cat: 'mapa', tag: 'Mapa de Rius', targetId: r.id,
+    q: `Toca al mapa on es troba el ${r.name}:`, exp: r.info
+  })),
+  ...mountainsData.map(m => ({
+    type: 'map', mapKind: 'mountain', cat: 'mapa', tag: 'Mapa de Relleu', targetId: m.id,
+    q: `Toca al mapa la zona de: ${m.name}`, exp: m.info
+  }))
+];
+
+let currentMode = 'mapa';
+let questions = [];
+let idx = 0;
+let score = 0;
+let streak = 0;
+let mapLocked = false;
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-estudi').classList.toggle('hidden', tab !== 'estudi');
+  document.getElementById('tab-joc').classList.toggle('hidden', tab !== 'joc');
+  if (tab === 'joc' && questions.length === 0) startQuiz();
+}
+
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  startQuiz();
+}
+
+function shuffle(arr) {
+  return arr.map(v => ({ v, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ v }) => v);
+}
+
+function startQuiz() {
+  let pool = [];
+  if (currentMode === 'mapa') pool = [...mapBank];
+  else if (currentMode === 'mixt') pool = [...textBank, ...mapBank];
+  else pool = textBank.filter(q => q.cat === currentMode);
+
+  questions = shuffle(pool).slice(0, 15);
+  idx = 0;
+  score = 0;
+  streak = 0;
+  updateStats();
+  renderQuestion();
+}
+
+function updateStats() {
+  document.getElementById('q-num').textContent = Math.min(idx + 1, questions.length);
+  document.getElementById('q-total').textContent = questions.length;
+  document.getElementById('score').textContent = score;
+  document.getElementById('streak').textContent = streak;
+}
+
+function renderQuestion() {
+  const fb = document.getElementById('feedback');
+  const nextBtn = document.getElementById('next-btn');
+  const mapArea = document.getElementById('quiz-map-area');
+  const optsDiv = document.getElementById('options');
+
+  fb.className = 'feedback';
+  nextBtn.className = 'next-btn';
+  mapLocked = false;
+
+  if (idx >= questions.length) {
+    document.getElementById('q-badge').style.display = 'none';
+    mapArea.classList.add('hidden');
+    document.getElementById('q-text').textContent = `🎉 Has acabat! Puntuació final: ${score} de ${questions.length}`;
+    optsDiv.innerHTML = `<button class="opt-btn" style="text-align:center;background:#0284c7;color:#fff;border:none;" onclick="startQuiz()">🔄 Tornar a jugar</button>`;
+    return;
+  }
+
+  document.getElementById('q-badge').style.display = 'inline-block';
+  const q = questions[idx];
+  const badge = document.getElementById('q-badge');
+  badge.textContent = q.tag;
+  badge.className = 'badge-type ' + (q.type === 'map' ? 'badge-mapa' : (q.cat === 'rius' ? 'badge-riu' : 'badge-muntanya'));
+  document.getElementById('q-text').textContent = q.q;
+
+  if (q.type === 'map') {
+    optsDiv.innerHTML = '';
+    mapArea.classList.remove('hidden');
+    if (q.mapKind === 'river') {
+      mapArea.innerHTML = buildRiverMapSVG('quiz', 'handleQuizMapClick');
+    } else {
+      mapArea.innerHTML = buildMountainMapSVG('quiz', 'handleQuizMapClick');
+    }
+  } else {
+    mapArea.classList.add('hidden');
+    const indexedOpts = q.opts.map((text, i) => ({ text, isCorrect: i === q.ans }));
+    const shuffledOpts = shuffle(indexedOpts);
+    optsDiv.innerHTML = '';
+    shuffledOpts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt.text;
+      btn.onclick = () => checkTestAnswer(btn, opt.isCorrect, q.exp, optsDiv);
+      optsDiv.appendChild(btn);
+    });
+  }
+}
+
+function handleQuizMapClick(clickedId, el) {
+  if (mapLocked) return;
+  mapLocked = true;
+
+  const q = questions[idx];
+  const fb = document.getElementById('feedback');
+  const isCorrect = clickedId === q.targetId;
+
+  if (isCorrect) {
+    el.classList.add('correct');
+    score++;
+    streak++;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = `✅ <strong>Clavat!</strong> ${q.exp}`;
+  } else {
+    el.classList.add('wrong');
+    streak = 0;
+    const correctEl = document.querySelector(`#quiz-map-area [data-id="${q.targetId}"]`);
+    if (correctEl) correctEl.classList.add('correct');
+
+    const clickedObj = q.mapKind === 'river'
+      ? riversData.find(r => r.id === clickedId)
+      : mountainsData.find(m => m.id === clickedId);
+
+    fb.className = 'feedback show err';
+    fb.innerHTML = `❌ Has tocat: <strong>${clickedObj ? clickedObj.name : ''}</strong>. El correcte està marcat en verd. ${q.exp}`;
+  }
+
+  updateStats();
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function checkTestAnswer(selectedBtn, isCorrect, exp, optsDiv) {
+  const buttons = optsDiv.querySelectorAll('.opt-btn');
+  buttons.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedback');
+  if (isCorrect) {
+    selectedBtn.classList.add('correct');
+    score++;
+    streak++;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = `✅ <strong>Molt bé!</strong> ${exp}`;
+  } else {
+    selectedBtn.classList.add('wrong');
+    streak = 0;
+    buttons.forEach(b => {
+      if (b.textContent === questions[idx].opts[questions[idx].ans]) b.classList.add('correct');
+    });
+    fb.className = 'feedback show err';
+    fb.innerHTML = `❌ <strong>Gairebé!</strong> ${exp}`;
+  }
+  updateStats();
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQuestion() {
+  idx++;
+  updateStats();
+  renderQuestion();
+}
+
+startQuiz();
+</script>
+</body>
+</html>
