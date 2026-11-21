@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Missió Comarques - Curs de Catalunya</title>
+  <style>
+    /* ==========================================================================
+       VARIABLES DE DISSENY I PALETA CÀLIDA MEDITERRÀNIA
+       ========================================================================== */
+    :root {
+      --bg-app: #FDF8F0;
+      --bg-card: #FFFFFF;
+      --bg-soft: #F4ECE1;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      
+      /* Colors inspirats en Catalunya */
+      --gold: #F59E0B;
+      --gold-light: #FEF3C7;
+      --gold-dark: #B45309;
+      
+      --crimson: #E11D48;
+      --crimson-light: #FFE4E6;
+      --crimson-dark: #9F1239;
+      
+      --sea: #0284C7;
+      --sea-light: #E0F2FE;
+      --sea-dark: #0369A1;
+      
+      --success: #10B981;
+      --success-light: #D1FAE5;
+      --success-dark: #047857;
+      
+      --danger: #EF4444;
+      --danger-light: #FEE2E2;
+      
+      --border-radius: 20px;
+      --shadow-sm: 0 2px 8px rgba(30, 41, 59, 0.06);
+      --shadow-md: 0 8px 20px rgba(30, 41, 59, 0.08);
+      --shadow-lg: 0 12px 28px rgba(30, 41, 59, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      line-height: 1.45;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       CAPÇALERA FIXA
+       ========================================================================== */
+    header {
+      background: var(--bg-card);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back {
+      background: var(--bg-soft);
+      border: none;
+      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    .app-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .app-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stats-pill {
+      background: var(--gold-light);
+      color: var(--gold-dark);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid #FDE68A;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       CONTENIDOR PRINCIPAL
+       ========================================================================== */
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    /* ==========================================================================
+       TARGETA DE PROGRÉS GLOBAL
+       ========================================================================== */
+    .progress-hero {
+      background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+      border: 2px solid #FCD34D;
+      border-radius: var(--border-radius);
+      padding: 18px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .progress-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--gold-dark);
+    }
+
+    .progress-count {
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--crimson);
+    }
+
+    .progress-bar-bg {
+      background: rgba(255, 255, 255, 0.8);
+      height: 16px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #FDE68A;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--crimson) 100%);
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .medals-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 6px;
+    }
+
+    .medal-badge {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      padding: 6px 4px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .medal-badge.earned {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border-color: var(--gold);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .medal-icon {
+      font-size: 1.3rem;
+      display: block;
+      margin-bottom: 2px;
+      filter: grayscale(100%) opacity(0.4);
+    }
+
+    .medal-badge.earned .medal-icon {
+      filter: none;
+    }
+
+    /* ==========================================================================
+       LLISTA DE BLOCS (LLIÇONS)
+       ========================================================================== */
+    .section-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .blocs-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .bloc-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bloc-card:active {
+      transform: scale(0.98);
+    }
+
+    .bloc-card.completed {
+      border-color: var(--success);
+      background: linear-gradient(to right, #FFFFFF, #F0FDF4);
+    }
+
+    .bloc-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .bloc-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bloc-day {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+
+    .bloc-name {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .bloc-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bloc-status-pill {
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       BOTÓ EXAMEN FINAL
+       ========================================================================== */
+    .final-exam-card {
+      background: linear-gradient(135deg, var(--sea) 0%, #0369A1 100%);
+      color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      transition: transform 0.15s ease;
+      margin-bottom: 28px;
+    }
+
+    .final-exam-card:active {
+      transform: scale(0.98);
+    }
+
+    .final-exam-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .final-exam-desc {
+      font-size: 0.88rem;
+      opacity: 0.92;
+    }
+
+    .final-exam-btn {
+      background: var(--gold);
+      color: #1E293B;
+      font-weight: 900;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ==========================================================================
+       VISTA DINS D'UN BLOC (PESTANYES ESTUDI / TEST)
+       ========================================================================== */
+    .tabs-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-soft);
+      padding: 5px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 12px 10px;
+      border-radius: 12px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==========================================================================
+       TARGETES D'ESTUDI (FLASHCARDS / DESPLEGABLES)
+       ========================================================================== */
+    .study-tip-banner {
+      background: var(--sea-light);
+      color: var(--sea-dark);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .comarca-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid #E2E8F0;
+      transition: all 0.25s ease;
+    }
+
+    .comarca-card.mastered {
+      border-color: var(--success);
+      background: #F8FAFC;
+    }
+
+    .comarca-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .comarca-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .comarca-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .capital-box {
+      background: var(--gold-light);
+      border: 2px solid #FDE68A;
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .capital-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gold-dark);
+    }
+
+    .capital-value {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--crimson-dark);
+    }
+
+    .capital-hidden-mask {
+      background: var(--gold);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .trick-box {
+      background: var(--bg-soft);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.94rem;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .trick-icon {
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .btn-master {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      border: 2px solid #CBD5E1;
+      background: white;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-master.active {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .btn-master:active {
+      transform: scale(0.97);
+    }
+
+    .study-footer-cta {
+      margin-top: 22px;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       INTERFÍCIE DE TEST / QUIZ
+       ========================================================================== */
+    .quiz-container {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .quiz-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .streak-badge {
+      background: var(--crimson-light);
+      color: var(--crimson);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .quiz-progress-track {
+      height: 8px;
+      background: var(--bg-soft);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: var(--sea);
+      transition: width 0.3s ease;
+    }
+
+    .question-type-tag {
+      display: inline-block;
+      background: var(--sea-light);
+      color: var(--sea-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .question-highlight {
+      color: var(--crimson);
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-app);
+      border: 2px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--sea);
+      background: var(--sea-light);
+    }
+
+    .option-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .option-btn.correct {
+      background: var(--success-light);
+      border-color: var(--success);
+      color: var(--success-dark);
+    }
+
+    .option-btn.wrong {
+      background: var(--danger-light);
+      border-color: var(--danger);
+      color: #991B1B;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .feedback-panel {
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      animation: popIn 0.25s ease;
+    }
+
+    .feedback-panel.is-correct {
+      background: var(--success-light);
+      border: 2px solid var(--success);
+      color: var(--success-dark);
+    }
+
+    .feedback-panel.is-wrong {
+      background: var(--danger-light);
+      border: 2px solid var(--danger);
+      color: #991B1B;
+    }
+
+    .feedback-title {
+      font-weight: 900;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .feedback-trick {
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       BOTONS PRIMARIS D'ACCIÓ
+       ========================================================================== */
+    .btn-primary {
+      width: 100%;
+      background: var(--crimson);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 1.08rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.28);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      width: 100%;
+      background: var(--bg-soft);
+      color: var(--text-main);
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* ==========================================================================
+       PANTALLA DE RESULTATS / CELEBRACIÓ
+       ========================================================================== */
+    .result-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-emoji {
+      font-size: 4rem;
+      margin-bottom: 10px;
+      display: block;
+      animation: bounce 1s infinite alternate;
+    }
+
+    .result-title {
+      font-size: 1.55rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .result-score {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--crimson);
+      margin: 12px 0;
+    }
+
+    .result-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    /* ==========================================================================
+       SELECTOR CONFIGURACIÓ EXAMEN FINAL
+       ========================================================================== */
+    .exam-setup-box {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 22px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .exam-options-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .choice-pill {
+      padding: 14px;
+      border-radius: 14px;
+      border: 2px solid #E2E8F0;
+      background: var(--bg-app);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .choice-pill.selected {
+      border-color: var(--sea);
+      background: var(--sea-light);
+      color: var(--sea-dark);
+    }
+
+    /* ==========================================================================
+       PEU I REINICI
+       ========================================================================== */
+    .reset-zone {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed #CBD5E1;
+    }
+
+    .btn-reset {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 8px 12px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    /* ==========================================================================
+       ANIMACIONS I CONFETI
+       ========================================================================== */
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      z-index: 999;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(105vh) rotate(720deg);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPÇALERA -->
+  <header>
+    <div class="header-left">
+      <a id="btn-index" href="index.html" class="btn-back" title="Tornar a l'índex de cursos" aria-label="Tornar a l'índex de cursos">🏠</a>
+      <button id="btn-back" class="btn-back hidden" aria-label="Tornar enrere">←</button>
+      <div>
+        <div id="header-title" class="app-title">Missió Comarques</div>
+        <div id="header-subtitle" class="app-subtitle">Curs de Catalunya en 5 dies</div>
+      </div>
+    </div>
+    <div class="stats-pill" title="Punts aconseguits">
+      <span>⭐</span>
+      <span id="points-display">0</span>
+    </div>
+  </header>
+
+  <!-- CONTINGUT DINÀMIC -->
+  <main id="app-root"></main>
+
+  <!-- MODAL DE CONFIRMACIÓ PER REINICIAR (SENSE USAR ALERT/CONFIRM NATIUS) -->
+  <div id="reset-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div style="font-size: 2.5rem; margin-bottom: 8px;">🔄</div>
+      <h3 style="font-size: 1.2rem; font-weight: 900; margin-bottom: 8px;">Vols reiniciar el curs?</h3>
+      <p style="font-size: 0.92rem; color: var(--text-muted);">Es posaran a zero les comarques apreses, les medalles i les estrelles per tornar a començar des del Dia 1.</p>
+      <div class="modal-actions">
+        <button id="btn-cancel-reset" class="btn-secondary" style="margin-top:0;">Cancel·lar</button>
+        <button id="btn-confirm-reset" class="btn-primary" style="padding:12px;">Sí, reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. BASE DE DADES COMPLETA DE LES 43 COMARQUES DE CATALUNYA
+       ========================================================================== */
+    const BLOCS_INFO = [
+      {
+        id: 1,
+        dia: "Dia 1",
+        nom: "Els Pirineus",
+        icona: "🏔️",
+        colorBg: "#E0F2FE",
+        colorText: "#0369A1",
+        medalla: "Medalla Neu",
+        descripcio: "Les 7 comarques més altes i fredes del nord."
+      },
+      {
+        id: 2,
+        dia: "Dia 2",
+        nom: "Comarques de Girona",
+        icona: "🌊",
+        colorBg: "#CCFBF1",
+        colorText: "#0F766E",
+        medalla: "Medalla Tramuntana",
+        descripcio: "Volcans, estanys i la Costa Brava (6 comarques)."
+      },
+      {
+        id: 3,
+        dia: "Dia 3",
+        nom: "Catalunya Central",
+        icona: "🌲",
+        colorBg: "#FEF3C7",
+        colorText: "#B45309",
+        medalla: "Medalla Cor",
+        descripcio: "El centre del país, incloent el Lluçanès i el Moianès (7 comarques)."
+      },
+      {
+        id: 4,
+        dia: "Dia 4",
+        nom: "Metropolità i Penedès",
+        icona: "🏙️",
+        colorBg: "#FFE4E6",
+        colorText: "#BE123C",
+        medalla: "Medalla Mediterrània",
+        descripcio: "La costa central i les vinyes del Penedès (8 comarques)."
+      },
+      {
+        id: 5,
+        dia: "Dia 5",
+        nom: "Ponent, Tarragona i Ebre",
+        icona: "☀️",
+        colorBg: "#FFEDD5",
+        colorText: "#C2410C",
+        medalla: "Medalla Sol i Riu",
+        descripcio: "La plana de Lleida, la Costa Daurada i el Delta (15 comarques)."
+      }
+    ];
+
+    const COMARQUES = [
+      // BLOC 1: PIRINEUS (7)
+      { id: "val-daran", bloc: 1, comarca: "Val d'Aran", capital: "Vielha e Mijaran", truc: "Comencen igual: Val i Vielha! És l'única vall que mira cap a l'oceà Atlàntic." },
+      { id: "alta-ribagorca", bloc: 1, comarca: "Alta Ribagorça", capital: "el Pont de Suert", truc: "Per creuar el riu alt de la Ribagorça necessites passar pel Pont de Suert." },
+      { id: "pallars-jussa", bloc: 1, comarca: "Pallars Jussà", capital: "Tremp", truc: "Jussà vol dir 'de baix': quan baixes de la muntanya trempes (Tremp)!" },
+      { id: "pallars-sobira", bloc: 1, comarca: "Pallars Sobirà", capital: "Sort", truc: "Les dues comencen per S: Pallars Sobirà → Sort. Quina sort viure allà dalt!" },
+      { id: "alt-urgell", bloc: 1, comarca: "Alt Urgell", capital: "la Seu d'Urgell", truc: "La capital porta el mateix cognom: la Seu d'Urgell." },
+      { id: "cerdanya", bloc: 1, comarca: "Cerdanya", capital: "Puigcerdà", truc: "El nom de la comarca està amagat dins la capital: Puig-CERDÀ-nya!" },
+      { id: "ripolles", bloc: 1, comarca: "Ripollès", capital: "Ripoll", truc: "Superfàcil! Ripollès ve directament de Ripoll." },
+
+      // BLOC 2: COMARQUES DE GIRONA (6)
+      { id: "garrotxa", bloc: 2, comarca: "Garrotxa", capital: "Olot", truc: "La terra dels volcans: quan explota un volcà d'Olot fa 'O-LOT!'." },
+      { id: "alt-emporda", bloc: 2, comarca: "Alt Empordà", capital: "Figueres", truc: "A dalt de l'Empordà hi creixen molt altes les Figueres (i hi ha el museu Dalí)." },
+      { id: "baix-emporda", bloc: 2, comarca: "Baix Empordà", capital: "la Bisbal d'Empordà", truc: "Porta 'd'Empordà' al nom i és famosa per la ceràmica de la Bisbal." },
+      { id: "pla-estany", bloc: 2, comarca: "Pla de l'Estany", capital: "Banyoles", truc: "On vas a banyar-te quan fa calor? A l'estany de Banyoles!" },
+      { id: "girones", bloc: 2, comarca: "Gironès", capital: "Girona", truc: "Superfàcil! Gironès ve directament de Girona." },
+      { id: "selva", bloc: 2, comarca: "Selva", capital: "Santa Coloma de Farners", truc: "Dins la Selva hi volen moltes colomes: Santa Coloma de Farners." },
+
+      // BLOC 3: CATALUNYA CENTRAL (7)
+      { id: "bergueda", bloc: 3, comarca: "Berguedà", capital: "Berga", truc: "Superfàcil! Berguedà ve directament de Berga (on se celebra la Patum)." },
+      { id: "llucanes", bloc: 3, comarca: "Lluçanès", capital: "Prats de Lluçanès", truc: "És la comarca més nova de Catalunya i la capital porta el seu nom: Prats de Lluçanès!" },
+      { id: "osona", bloc: 3, comarca: "Osona", capital: "Vic", truc: "Nom curtet i fàcil: Osona → Vic (terra de llonganisses i boira)." },
+      { id: "bages", bloc: 3, comarca: "Bages", capital: "Manresa", truc: "Al mig de Catalunya hi ha el Bages i la ciutat de Manresa (amb la muntanya de Montserrat al costat)." },
+      { id: "moianes", bloc: 3, comarca: "Moianès", capital: "Moià", truc: "Gairebé idèntic! Moianès ve directament de Moià." },
+      { id: "solsones", bloc: 3, comarca: "Solsonès", capital: "Solsona", truc: "Superfàcil! Solsonès ve directament de Solsona." },
+      { id: "anoia", bloc: 3, comarca: "Anoia", capital: "Igualada", truc: "Tots els nens i nenes de l'Anoia són tractats per igual a Igualada." },
+
+      // BLOC 4: ÀMBIT METROPOLITÀ I PENEDÈS (8)
+      { id: "maresme", bloc: 4, comarca: "Maresme", capital: "Mataró", truc: "Comencen per MA i tenen platja: MAresme → MAtaró." },
+      { id: "valles-oriental", bloc: 4, comarca: "Vallès Oriental", capital: "Granollers", truc: "A l'Orient hi ha el circuit de Montmeló i la ciutat gran: Granollers." },
+      { id: "valles-occidental", bloc: 4, comarca: "Vallès Occidental", capital: "Sabadell i Terrassa", truc: "L'única comarca amb DUES capitals! Recorda S i T: Sabadell i Terrassa." },
+      { id: "barcelones", bloc: 4, comarca: "Barcelonès", capital: "Barcelona", truc: "Superfàcil! Barcelonès ve de Barcelona, la capital de Catalunya." },
+      { id: "baix-llobregat", bloc: 4, comarca: "Baix Llobregat", capital: "Sant Feliu de Llobregat", truc: "La capital acaba igual que la comarca: Sant Feliu de Llobregat." },
+      { id: "garraf", bloc: 4, comarca: "Garraf", capital: "Vilanova i la Geltrú", truc: "Al Garraf hi ha una vila molt nova davant del mar: Vilanova i la Geltrú." },
+      { id: "alt-penedes", bloc: 4, comarca: "Alt Penedès", capital: "Vilafranca del Penedès", truc: "Porta 'del Penedès' al nom! Vilafranca és a la part alta." },
+      { id: "baix-penedes", bloc: 4, comarca: "Baix Penedès", capital: "el Vendrell", truc: "A la part baixa del Penedès hi ha el Vendrell (on bufa el vent de mar)." },
+
+      // BLOC 5: PONENT, TARRAGONA I TERRES DE L'EBRE (15)
+      { id: "noguera", bloc: 5, comarca: "Noguera", capital: "Balaguer", truc: "Rima fàcil: 'Sota la noguera hi balla en Balaguer'. És la comarca més gran de Catalunya!" },
+      { id: "segarra", bloc: 5, comarca: "Segarra", capital: "Cervera", truc: "La Segarra i Cervera tenen molta història i castells." },
+      { id: "urgell", bloc: 5, comarca: "Urgell", capital: "Tàrrega", truc: "L'Urgell de la plana té per capital Tàrrega (famosa pel teatre al carrer)." },
+      { id: "pla-durgell", bloc: 5, comarca: "Pla d'Urgell", capital: "Mollerussa", truc: "Al Pla d'Urgell no hi ha muntanyes, tot és pla com una taula a Mollerussa." },
+      { id: "segria", bloc: 5, comarca: "Segrià", capital: "Lleida", truc: "El riu Segre passa per Lleida, i per això la comarca es diu Segrià!" },
+      { id: "garrigues", bloc: 5, comarca: "Garrigues", capital: "les Borges Blanques", truc: "Terra d'oli d'oliva verge extra amb capital a les Borges Blanques." },
+      { id: "conca-barbera", bloc: 5, comarca: "Conca de Barberà", capital: "Montblanc", truc: "A Montblanc Sant Jordi va matar el drac! És la capital de la Conca de Barberà." },
+      { id: "alt-camp", bloc: 5, comarca: "Alt Camp", capital: "Valls", truc: "A l'Alt Camp s'hi fan els castells més alts i els calçots de Valls!" },
+      { id: "baix-camp", bloc: 5, comarca: "Baix Camp", capital: "Reus", truc: "Al Baix Camp hi ha Reus (famosa per Gaudí i les avellanes)." },
+      { id: "tarragones", bloc: 5, comarca: "Tarragonès", capital: "Tarragona", truc: "Superfàcil! Tarragonès ve directament de Tarragona." },
+      { id: "priorat", bloc: 5, comarca: "Priorat", capital: "Falset", truc: "Truc divertit: 'El prior del Priorat és un falset (Falset)'." },
+      { id: "ribera-debre", bloc: 5, comarca: "Ribera d'Ebre", capital: "Móra d'Ebre", truc: "Les dues porten 'd'Ebre' al final: Ribera d'Ebre → Móra d'Ebre." },
+      { id: "terra-alta", bloc: 5, comarca: "Terra Alta", capital: "Gandesa", truc: "En aquesta terra alta hi trobaràs Gandesa." },
+      { id: "baix-ebre", bloc: 5, comarca: "Baix Ebre", capital: "Tortosa", truc: "Abans que el riu Ebre arribi al mar passa per Tortosa." },
+      { id: "montsia", bloc: 5, comarca: "Montsià", capital: "Amposta", truc: "La comarca més al sud de Catalunya, al Delta de l'Ebre, amb capital a Amposta." }
+    ];
+
+    /* ==========================================================================
+       2. ESTAT DE L'APLICACIÓ I PERSISTÈNCIA AMB LOCALSTORAGE
+       ========================================================================== */
+    const STORAGE_KEY = "missio_comarques_cat_v1";
+
+    let state = {
+      masteredIds: [],       // Array d'IDs de comarques marcades com apreses
+      completedBlocs: [],    // Array d'IDs de blocs (1..5) amb test superat
+      points: 0,             // Estrelles / punts acumulats
+      bestExamStreak: 0      // Millor ratxa a l'examen final
+    };
+
+    // Estat de navegació (no cal guardar-lo a localStorage)
+    let nav = {
+      view: "home",          // "home" | "bloc" | "exam"
+      activeBlocId: 1,
+      activeTab: "study",    // "study" | "quiz"
+      revealedCapitals: {},  // Per amagar/mostrar capital en mode estudi si es vol practicar
+      quiz: null,            // Estat del test actiu
+      examConfigCount: 10    // 10 o 15 preguntes a l'examen final
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = {
+            masteredIds: Array.isArray(parsed.masteredIds) ? parsed.masteredIds : [],
+            completedBlocs: Array.isArray(parsed.completedBlocs) ? parsed.completedBlocs : [],
+            points: typeof parsed.points === "number" ? parsed.points : 0,
+            bestExamStreak: typeof parsed.bestExamStreak === "number" ? parsed.bestExamStreak : 0
+          };
+        }
+      } catch (e) {
+        console.warn("No s'ha pogut llegir localStorage:", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn("No s'ha pogut desar a localStorage:", e);
+      }
+      updateHeaderStats();
+    }
+
+    /* ==========================================================================
+       3. UTILITATS GENERALS I GENERACIÓ DE PREGUNTES
+       ========================================================================== */
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function launchConfetti() {
+      const colors = ["#F59E0B", "#E11D48", "#10B981", "#0284C7", "#FBBF24"];
+      for (let i = 0; i < 45; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = (Math.random() * 1.5 + 1.5) + "s";
+        piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 3200);
+      }
+    }
+
+    function buildQuizQuestions(poolComarques, totalQuestions) {
+      // Si poolComarques té menys elements que totalQuestions, fem servir tots els del pool
+      const selected = shuffleArray(poolComarques).slice(0, totalQuestions);
+      
+      return selected.map((item, idx) => {
+        // Alternar tipus de pregunta: 0 = preguntar capital, 1 = preguntar comarca
+        const askCapital = idx % 2 === 0;
+        const correctAnswer = askCapital ? item.capital : item.comarca;
+
+        // Agafar distractors (prioritzant el mateix bloc per fer-ho interessant, i completant amb altres si cal)
+        const sameBlocOthers = COMARQUES.filter(c => c.id !== item.id && c.bloc === item.bloc);
+        const otherBlocs = COMARQUES.filter(c => c.id !== item.id && c.bloc !== item.bloc);
+        const distractorPool = [...shuffleArray(sameBlocOthers), ...shuffleArray(otherBlocs)];
+        
+        const wrongAnswers = distractorPool
+          .slice(0, 3)
+          .map(d => askCapital ? d.capital : d.comarca);
+
+        const options = shuffleArray([correctAnswer, ...wrongAnswers]);
+
+        return {
+          comarcaObj: item,
+          askCapital,
+          promptTarget: askCapital ? item.comarca : item.capital,
+          correctAnswer,
+          options
+        };
+      });
+    }
+
+    /* ==========================================================================
+       4. RENDERITZAT DE CAPÇALERA I VISTES
+       ========================================================================== */
+    function updateHeaderStats() {
+      document.getElementById("points-display").textContent = state.points;
+      const btnIndex = document.getElementById("btn-index");
+      const btnBack = document.getElementById("btn-back");
+      const titleEl = document.getElementById("header-title");
+      const subEl = document.getElementById("header-subtitle");
+
+      if (nav.view === "home") {
+        btnIndex.classList.remove("hidden");
+        btnBack.classList.add("hidden");
+        titleEl.textContent = "Missió Comarques";
+        subEl.textContent = "Curs de Catalunya (43 comarques)";
+      } else if (nav.view === "bloc") {
+        btnIndex.classList.add("hidden");
+        btnBack.classList.remove("hidden");
+        const bloc = BLOCS_INFO.find(b => b.id === nav.activeBlocId);
+        titleEl.textContent = `${bloc.dia}: ${bloc.nom}`;
+        subEl.textContent = bloc.descripcio;
+      } else if (nav.view === "exam") {
+        btnIndex.classList.add("hidden");
+        btnBack.classList.remove("hidden");
+        titleEl.textContent = "Examen Final";
+        subEl.textContent = "Repte barrejat de les 43 comarques";
+      }
+    }
+
+    function render() {
+      updateHeaderStats();
+      const root = document.getElementById("app-root");
+
+      if (nav.view === "home") {
+        renderHome(root);
+      } else if (nav.view === "bloc") {
+        renderBloc(root);
+      } else if (nav.view === "exam") {
+        renderExam(root);
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       VISTA 1: PANTALLA D'INICI (CURS EN 5 DIES)
+       -------------------------------------------------------------------------- */
+    function renderHome(root) {
+      const masteredCount = state.masteredIds.length;
+      const pct = Math.round((masteredCount / COMARQUES.length) * 100);
+
+      const medalsHtml = BLOCS_INFO.map(b => {
+        const earned = state.completedBlocs.includes(b.id);
+        return `
+          <div class="medal-badge ${earned ? "earned" : ""}">
+            <span class="medal-icon">${b.icona}</span>
+            <div>${b.dia}</div>
+          </div>
+        `;
+      }).join("");
+
+      const blocsHtml = BLOCS_INFO.map(b => {
+        const blocComarques = COMARQUES.filter(c => c.bloc === b.id);
+        const blocMastered = blocComarques.filter(c => state.masteredIds.includes(c.id)).length;
+        const isCompleted = state.completedBlocs.includes(b.id);
+
+        let statusText = `${blocMastered}/${blocComarques.length} apreses`;
+        let pillStyle = `background: ${b.colorBg}; color: ${b.colorText};`;
+        let pillLabel = "Entrar →";
+
+        if (isCompleted) {
+          pillStyle = `background: var(--success-light); color: var(--success-dark);`;
+          pillLabel = "Superat ✓";
+        }
+
+        return `
+          <div class="bloc-card ${isCompleted ? "completed" : ""}" onclick="openBloc(${b.id})">
+            <div class="bloc-icon-box" style="background: ${b.colorBg};">
+              ${b.icona}
+            </div>
+            <div class="bloc-info">
+              <div class="bloc-day" style="color: ${b.colorText};">${b.dia} · ${blocComarques.length} comarques</div>
+              <div class="bloc-name">${b.nom}</div>
+              <div class="bloc-meta">
+                <span>🎯 ${statusText}</span>
+              </div>
+            </div>
+            <div class="bloc-status-pill" style="${pillStyle}">
+              ${pillLabel}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      root.innerHTML = `
+        <div class="progress-hero">
+          <div class="progress-header">
+            <span class="progress-title">El teu progrés global</span>
+            <span class="progress-count">${masteredCount} / 43</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+          </div>
+          <div class="medals-row">
+            ${medalsHtml}
+          </div>
+        </div>
+
+        <div class="section-label">Pla d'estudi en 5 dies</div>
+        <div class="blocs-grid">
+          ${blocsHtml}
+        </div>
+
+        <div class="section-label">Posa't a prova</div>
+        <div class="final-exam-card" onclick="openExam()">
+          <div>
+            <div class="final-exam-title">🏆 Gran Examen Final</div>
+            <div class="final-exam-desc">
+              Barreja totes les 43 comarques i capitals!
+              ${state.bestExamStreak > 0 ? `<br><strong>Millor ratxa: ${state.bestExamStreak} encerts seguits 🔥</strong>` : ""}
+            </div>
+          </div>
+          <div class="final-exam-btn">Jugar</div>
+        </div>
+
+        <div class="reset-zone">
+          <button class="btn-reset" onclick="openResetModal()">Reiniciar tot el progrés del curs</button>
+        </div>
+      `;
+    }
+
+    /* --------------------------------------------------------------------------
+       VISTA 2: DINS D'UN BLOC (ESTUDI I TRUCS / TEST DEL BLOC)
+       -------------------------------------------------------------------------- */
+    function renderBloc(root) {
+      const bloc = BLOCS_INFO.find(b => b.id === nav.activeBlocId);
+      const blocComarques = COMARQUES.filter(c => c.bloc === bloc.id);
+
+      let contentHtml = "";
+
+      if (nav.activeTab === "study") {
+        const cardsHtml = blocComarques.map(c => {
+          const isMastered = state.masteredIds.includes(c.id);
+          const isHidden = !!nav.revealedCapitals[c.id];
+
+          return `
+            <div class="comarca-card ${isMastered ? "mastered" : ""}">
+              <div class="comarca-top">
+                <div>
+                  <div class="comarca-label">Comarca</div>
+                  <div class="comarca-title">${c.comarca}</div>
+                </div>
+                <span style="font-size: 1.3rem;">${isMastered ? "✅" : "📍"}</span>
+              </div>
+
+              <div class="capital-box" onclick="toggleCapitalVisibility('${c.id}')" title="Toca per amagar o mostrar la capital">
+                <span class="capital-label">Capital:</span>
+                ${isHidden 
+                  ? `<span class="capital-hidden-mask">👁️ Toca per veure</span>` 
+                  : `<span class="capital-value">${c.capital}</span>`
+                }
+              </div>
+
+              <div class="trick-box">
+                <span class="trick-icon">💡</span>
+                <div><strong>Truc:</strong> ${c.truc}</div>
+              </div>
+
+              <button class="btn-master ${isMastered ? "active" : ""}" onclick="toggleMastered('${c.id}')">
+                ${isMastered ? "✓ Ja me la sé!" : "Marcar com a apresa"}
+              </button>
+            </div>
+          `;
+        }).join("");
+
+        contentHtml = `
+          <div class="study-tip-banner">
+            <span>👆</span>
+            <span>Llegeix el truc de cada comarca. Pots tocar la caixa groga de la capital per amagar-la i practicar de memòria!</span>
+          </div>
+          <div class="cards-list">
+            ${cardsHtml}
+          </div>
+          <div class="study-footer-cta">
+            <button class="btn-primary" onclick="switchBlocTab('quiz')">
+              🎯 Fer el Test d'aquest Bloc (${blocComarques.length} preguntes)
+            </button>
+          </div>
+        `;
+      } else {
+        contentHtml = renderQuizEngine(blocComarques, false);
+      }
+
+      root.innerHTML = `
+        <div class="tabs-bar">
+          <button class="tab-btn ${nav.activeTab === "study" ? "active" : ""}" onclick="switchBlocTab('study')">
+            📖 Estudi i Trucs
+          </button>
+          <button class="tab-btn ${nav.activeTab === "quiz" ? "active" : ""}" onclick="switchBlocTab('quiz')">
+            🎯 Test del Bloc
+          </button>
+        </div>
+        ${contentHtml}
+      `;
+    }
+
+    /* --------------------------------------------------------------------------
+       VISTA 3: EXAMEN FINAL (43 COMARQUES BARREJADES)
+       -------------------------------------------------------------------------- */
+    function renderExam(root) {
+      if (!nav.quiz) {
+        root.innerHTML = `
+          <div class="exam-setup-box">
+            <div style="font-size: 3.5rem; margin-bottom: 10px;">🏆</div>
+            <h2 style="font-size: 1.45rem; font-weight: 900; margin-bottom: 8px;">Gran Repte de Catalunya</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Preguntes aleatòries de totes les <strong>43 comarques</strong> i capitals. Aconsegueix la ratxa d'encerts més llarga!
+            </p>
+
+            <div class="exam-options-row">
+              <div class="choice-pill ${nav.examConfigCount === 10 ? "selected" : ""}" onclick="setExamCount(10)">
+                ⚡ 10 Preguntes<br><span style="font-size:0.78rem; font-weight:600;">Ràpid (2 min)</span>
+              </div>
+              <div class="choice-pill ${nav.examConfigCount === 15 ? "selected" : ""}" onclick="setExamCount(15)">
+                🔥 15 Preguntes<br><span style="font-size:0.78rem; font-weight:600;">Expert (3 min)</span>
+              </div>
+            </div>
+
+            <button class="btn-primary" onclick="startFinalExam()">Començar Examen Ara!</button>
+          </div>
+        `;
+        return;
+      }
+
+      root.innerHTML = renderQuizEngine(COMARQUES, true);
+    }
+
+    /* --------------------------------------------------------------------------
+       MOTOR COMÚ DE PREGUNTES I RESULTATS (PER A BLOCS I EXAMEN FINAL)
+       -------------------------------------------------------------------------- */
+    function renderQuizEngine(poolComarques, isFinalExam) {
+      if (!nav.quiz) {
+        nav.quiz = {
+          questions: buildQuizQuestions(poolComarques, poolComarques.length),
+          currentIndex: 0,
+          score: 0,
+          streak: 0,
+          answered: false,
+          selectedOption: null,
+          isCorrect: false,
+          finished: false,
+          isFinalExam
+        };
+      }
+
+      const qState = nav.quiz;
+
+      // PANTALLA DE RESULTATS FINALS DEL TEST
+      if (qState.finished) {
+        const total = qState.questions.length;
+        const passed = qState.score >= Math.ceil(total * 0.75); // 75% per guanyar medalla
+        const bloc = !isFinalExam ? BLOCS_INFO.find(b => b.id === nav.activeBlocId) : null;
+
+        return `
+          <div class="result-card">
+            <span class="result-emoji">${passed ? "🎉" : "💪"}</span>
+            <h2 class="result-title">
+              ${passed 
+                ? (isFinalExam ? "Examen Superat!" : `Has guanyat la ${bloc.medalla}!`) 
+                : "Molt bon intent!"}
+            </h2>
+            <div class="result-score">${qState.score} / ${total}</div>
+            <p class="result-desc">
+              ${passed 
+                ? "Has demostrat que domines aquestes comarques i capitals. Continua així!" 
+                : "Repassa els trucs de les que has fallat i torna-ho a provar per aconseguir la medalla!"}
+            </p>
+            <button class="btn-primary" onclick="restartCurrentQuiz()">🔄 Tornar a fer el test</button>
+            <button class="btn-secondary" onclick="goHome()">🏠 Tornar al menú principal</button>
+          </div>
+        `;
+      }
+
+      // PANTALLA DE PREGUNTA ACTIVA
+      const currentQ = qState.questions[qState.currentIndex];
+      const total = qState.questions.length;
+      const progressPct = ((qState.currentIndex) / total) * 100;
+
+      const optionsHtml = currentQ.options.map(opt => {
+        let extraClass = "";
+        let badgeIcon = "";
+
+        if (qState.answered) {
+          if (opt === currentQ.correctAnswer) {
+            extraClass = "correct";
+            badgeIcon = "✅";
+          } else if (opt === qState.selectedOption) {
+            extraClass = "wrong";
+            badgeIcon = "❌";
+          }
+        }
+
+        // Escapar cometes simples per a l'atribut onclick
+        const safeOpt = opt.replace(/'/g, "\\'");
+        return `
+          <button 
+            class="option-btn ${extraClass}" 
+            ${qState.answered ? "disabled" : ""} 
+            onclick="submitAnswer('${safeOpt}')"
+          >
+            <span>${opt}</span>
+            <span>${badgeIcon}</span>
+          </button>
+        `;
+      }).join("");
+
+      const feedbackHtml = qState.answered ? `
+        <div class="feedback-panel ${qState.isCorrect ? "is-correct" : "is-wrong"}">
+          <div class="feedback-title">
+            ${qState.isCorrect ? "🌟 Molt bé! +10 punts" : `😅 Ups! La resposta era: ${currentQ.correctAnswer}`}
+          </div>
+          <div class="feedback-trick">
+            💡 ${currentQ.comarcaObj.truc}
+          </div>
+        </div>
+        <button class="btn-primary" onclick="nextQuestion()">
+          ${qState.currentIndex + 1 < total ? "Següent pregunta →" : "Veure resultats 🏆"}
+        </button>
+      ` : "";
+
+      return `
+        <div class="quiz-container">
+          <div class="quiz-top-bar">
+            <span>Pregunta ${qState.currentIndex + 1} de ${total}</span>
+            ${qState.streak >= 2 ? `<span class="streak-badge">🔥 Ratxa: ${qState.streak}</span>` : `<span>Encerts: ${qState.score}</span>`}
+          </div>
+
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" style="width: ${progressPct}%;"></div>
+          </div>
+
+          <div class="question-type-tag">
+            ${currentQ.askCapital ? "Busca la capital" : "Busca la comarca"}
+          </div>
+
+          <div class="question-text">
+            ${currentQ.askCapital 
+              ? `Quina és la capital de <span class="question-highlight">${currentQ.promptTarget}</span>?` 
+              : `De quina comarca és capital <span class="question-highlight">${currentQ.promptTarget}</span>?`}
+          </div>
+
+          <div class="options-grid">
+            ${optionsHtml}
+          </div>
+
+          ${feedbackHtml}
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       5. ACCIONS DE L'USUARI I HANDLERS
+       ========================================================================== */
+    function goHome() {
+      nav.view = "home";
+      nav.quiz = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openBloc(blocId) {
+      nav.view = "bloc";
+      nav.activeBlocId = blocId;
+      nav.activeTab = "study";
+      nav.quiz = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function switchBlocTab(tab) {
+      nav.activeTab = tab;
+      if (tab === "quiz") {
+        const blocComarques = COMARQUES.filter(c => c.bloc === nav.activeBlocId);
+        nav.quiz = {
+          questions: buildQuizQuestions(blocComarques, blocComarques.length),
+          currentIndex: 0,
+          score: 0,
+          streak: 0,
+          answered: false,
+          selectedOption: null,
+          isCorrect: false,
+          finished: false,
+          isFinalExam: false
+        };
+      } else {
+        nav.quiz = null;
+      }
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleCapitalVisibility(comarcaId) {
+      nav.revealedCapitals[comarcaId] = !nav.revealedCapitals[comarcaId];
+      render();
+    }
+
+    function toggleMastered(comarcaId) {
+      const idx = state.masteredIds.indexOf(comarcaId);
+      if (idx === -1) {
+        state.masteredIds.push(comarcaId);
+        state.points += 5;
+      } else {
+        state.masteredIds.splice(idx, 1);
+      }
+      saveState();
+      render();
+    }
+
+    function openExam() {
+      nav.view = "exam";
+      nav.quiz = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function setExamCount(count) {
+      nav.examConfigCount = count;
+      render();
+    }
+
+    function startFinalExam() {
+      nav.quiz = {
+        questions: buildQuizQuestions(COMARQUES, nav.examConfigCount),
+        currentIndex: 0,
+        score: 0,
+        streak: 0,
+        answered: false,
+        selectedOption: null,
+        isCorrect: false,
+        finished: false,
+        isFinalExam: true
+      };
+      render();
+    }
+
+    function submitAnswer(chosenOption) {
+      if (!nav.quiz || nav.quiz.answered) return;
+
+      const currentQ = nav.quiz.questions[nav.quiz.currentIndex];
+      const isCorrect = chosenOption === currentQ.correctAnswer;
+
+      nav.quiz.answered = true;
+      nav.quiz.selectedOption = chosenOption;
+      nav.quiz.isCorrect = isCorrect;
+
+      if (isCorrect) {
+        nav.quiz.score += 1;
+        nav.quiz.streak += 1;
+        state.points += 10;
+
+        // Si l'encerta al test, la marquem automàticament com a apresa!
+        if (!state.masteredIds.includes(currentQ.comarcaObj.id)) {
+          state.masteredIds.push(currentQ.comarcaObj.id);
+        }
+
+        if (nav.quiz.isFinalExam && nav.quiz.streak > state.bestExamStreak) {
+          state.bestExamStreak = nav.quiz.streak;
+        }
+      } else {
+        nav.quiz.streak = 0;
+      }
+
+      saveState();
+      render();
+    }
+
+    function nextQuestion() {
+      if (!nav.quiz) return;
+
+      if (nav.quiz.currentIndex + 1 < nav.quiz.questions.length) {
+        nav.quiz.currentIndex += 1;
+        nav.quiz.answered = false;
+        nav.quiz.selectedOption = null;
+        nav.quiz.isCorrect = false;
+      } else {
+        // Test acabat
+        nav.quiz.finished = true;
+        const total = nav.quiz.questions.length;
+        const passed = nav.quiz.score >= Math.ceil(total * 0.75);
+
+        if (passed) {
+          launchConfetti();
+          if (!nav.quiz.isFinalExam && !state.completedBlocs.includes(nav.activeBlocId)) {
+            state.completedBlocs.push(nav.activeBlocId);
+            state.points += 50; // Bonus medalla
+            saveState();
+          }
+        }
+      }
+
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function restartCurrentQuiz() {
+      if (!nav.quiz) return;
+      if (nav.quiz.isFinalExam) {
+        startFinalExam();
+      } else {
+        switchBlocTab("quiz");
+      }
+    }
+
+    // Modal de reinici
+    function openResetModal() {
+      document.getElementById("reset-modal").classList.remove("hidden");
+    }
+
+    document.getElementById("btn-cancel-reset").addEventListener("click", () => {
+      document.getElementById("reset-modal").classList.add("hidden");
+    });
+
+    document.getElementById("btn-confirm-reset").addEventListener("click", () => {
+      state = {
+        masteredIds: [],
+        completedBlocs: [],
+        points: 0,
+        bestExamStreak: 0
+      };
+      nav.revealedCapitals = {};
+      saveState();
+      document.getElementById("reset-modal").classList.add("hidden");
+      goHome();
+    });
+
+    document.getElementById("btn-back").addEventListener("click", goHome);
+
+    // Inicialització en carregar la pàgina
+    window.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      render();
+    });
+  </script>
+</body>
+</html>
