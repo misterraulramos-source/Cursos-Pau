@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cursos d'en Pau - Geografia</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --blue: #0284c7;
+      --blue-bg: #e0f2fe;
+      --amber: #d97706;
+      --amber-bg: #fef3c7;
+      --crimson: #e11d48;
+      --crimson-bg: #ffe4e6;
+      --green: #16a34a;
+      --green-bg: #dcfce7;
+      --shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+    .container {
+      width: 100%;
+      max-width: 640px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .badge {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .courses-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .course-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .course-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+    }
+    .course-card:active {
+      transform: scale(0.98);
+    }
+    .course-card.rius:hover { border-color: var(--blue); }
+    .course-card.comarques:hover { border-color: var(--amber); }
+    .course-card.espanya:hover { border-color: var(--crimson); }
+
+    .icon-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    .rius .icon-box { background: var(--blue-bg); }
+    .comarques .icon-box { background: var(--amber-bg); }
+    .espanya .icon-box { background: var(--crimson-bg); }
+
+    .course-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .course-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .course-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .progress-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .progress-pill.done {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    .arrow {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">📚 Zona d'Estudi</span>
+      <h1>Cursos d'en Pau</h1>
+      <p>Tria un tema per estudiar amb mapes, trucs i posar-te a prova</p>
+    </header>
+
+    <div class="courses-grid">
+      <a href="rius-muntanyes.html" class="course-card rius">
+        <div class="icon-box">🏔️</div>
+        <div class="course-info">
+          <div class="course-title">Rius i Muntanyes de Catalunya</div>
+          <div class="course-desc">Mapes interactius de relleu i conques fluvials + exercicis per situar-los.</div>
+          <span class="progress-pill">🗺️ Guia visual + Quiz</span>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <a href="comarques.html" class="course-card comarques">
+        <div class="icon-box">🧭</div>
+        <div class="course-info">
+          <div class="course-title">Missió Comarques (43 comarques)</div>
+          <div class="course-desc">Estudi per províncies amb trucs de memòria, mapa i tests de comarques i capitals.</div>
+          <span id="comarques-status" class="progress-pill">⭐ 0 / 43 apreses</span>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <a href="espanya.html" class="course-card espanya">
+        <div class="icon-box">🇪🇸</div>
+        <div class="course-info">
+          <div class="course-title">Missió Espanya (Comunitats i Províncies)</div>
+          <div class="course-desc">Aprèn primer les 17 comunitats i després les 50 províncies amb bateria intensiva de tests.</div>
+          <span id="espanya-status" class="progress-pill">⭐ 0 / 19 com · 0 / 50 prov</span>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+    </div>
+
+    <footer>
+      Fet a mida per repassar des del mòbil o l'ordinador
+    </footer>
+  </div>
+
+  <script>
+    // Progrés Missió Comarques
+    try {
+      const rawCom = localStorage.getItem("missio_comarques_provincies_v7") || localStorage.getItem("missio_comarques_cat_v1");
+      if (rawCom) {
+        const data = JSON.parse(rawCom);
+        const count = Array.isArray(data.masteredIds) ? data.masteredIds.length : 0;
+        const pts = typeof data.points === "number" ? data.points : 0;
+        const badge = document.getElementById("comarques-status");
+        if (count > 0 || pts > 0) {
+          badge.textContent = `⭐ ${count} / 43 apreses · ${pts} pts`;
+          if (count === 43) badge.classList.add("done");
+        }
+      }
+    } catch (e) {}
+
+    // Progrés Missió Espanya
+    try {
+      const rawEsp = localStorage.getItem("missio_espanya_v1");
+      if (rawEsp) {
+        const data = JSON.parse(rawEsp);
+        const coms = Array.isArray(data.masteredComs) ? data.masteredComs.length : 0;
+        const provs = Array.isArray(data.masteredProvs) ? data.masteredProvs.length : 0;
+        const pts = typeof data.points === "number" ? data.points : 0;
+        const badge = document.getElementById("espanya-status");
+        if (coms > 0 || provs > 0 || pts > 0) {
+          badge.textContent = `⭐ ${coms}/19 com · ${provs}/50 prov · ${pts} pts`;
+          if (coms === 19 && provs === 50) badge.classList.add("done");
+        }
+      }
+    } catch (e) {}
+  </script>
+</body>
+</html>
