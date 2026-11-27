@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Missió Espanya - Comunitats i Províncies</title>
+  <style>
+    :root {
+      --bg-app: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-soft: #EEF2F6;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+
+      --primary: #2563EB;
+      --primary-light: #DBEAFE;
+      --primary-dark: #1D4ED8;
+
+      --crimson: #E11D48;
+      --crimson-light: #FFE4E6;
+      --crimson-dark: #9F1239;
+
+      --gold: #F59E0B;
+      --gold-light: #FEF3C7;
+      --gold-dark: #B45309;
+
+      --emerald: #059669;
+      --emerald-light: #D1FAE5;
+
+      --purple: #7C3AED;
+      --purple-light: #EDE9FE;
+
+      --success: #10B981;
+      --success-light: #D1FAE5;
+      --success-dark: #047857;
+
+      --danger: #EF4444;
+      --danger-light: #FEE2E2;
+
+      --border-radius: 20px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 8px 20px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      line-height: 1.45;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* CAPÇALERA */
+    header {
+      background: var(--bg-card);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back {
+      background: var(--bg-soft);
+      border: none;
+      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.15s ease;
+    }
+
+    .btn-back:active { transform: scale(0.92); }
+
+    .app-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .app-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stats-pill {
+      background: var(--gold-light);
+      color: var(--gold-dark);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid #FDE68A;
+      white-space: nowrap;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 18px 16px 44px;
+    }
+
+    /* PROGRÉS DOBLE (FASE 1 I FASE 2) */
+    .progress-hero {
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+      border: 2px solid #93C5FD;
+      border-radius: var(--border-radius);
+      padding: 18px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-dual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .prog-box {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid #BFDBFE;
+    }
+
+    .prog-box-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--primary-dark);
+    }
+
+    .progress-bar-bg {
+      background: #E2E8F0;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--emerald) 100%);
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .section-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      margin-top: 6px;
+      padding-left: 4px;
+    }
+
+    /* TARGETES DE FASES */
+    .phase-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid #E2E8F0;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .phase-card:active { transform: scale(0.98); }
+    .phase-card.phase-1 { border-left: 6px solid var(--primary); }
+    .phase-card.phase-2 { border-left: 6px solid var(--emerald); }
+
+    .phase-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .phase-info { flex: 1; }
+    .phase-tag {
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+    .phase-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 3px;
+    }
+    .phase-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .pill-go {
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* GIMNÀS DE TESTS */
+    .tests-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 520px) {
+      .tests-grid { grid-template-columns: 1fr; }
+    }
+
+    .test-launcher {
+      border-radius: var(--border-radius);
+      padding: 16px;
+      color: white;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: transform 0.15s ease;
+    }
+
+    .test-launcher:active { transform: scale(0.97); }
+    .bg-blue { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); }
+    .bg-teal { background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%); }
+    .bg-emerald { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+    .bg-crimson { background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%); }
+    .bg-purple { background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%); }
+    .bg-amber { background: linear-gradient(135deg, #D97706 0%, #B45309 100%); }
+
+    .tl-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .tl-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .tl-badge {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tl-desc {
+      font-size: 0.83rem;
+      opacity: 0.94;
+    }
+
+    /* PESTANYES */
+    .tabs-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: var(--bg-soft);
+      padding: 5px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      gap: 5px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 11px 6px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* FILTRES I TARGETES D'ESTUDI */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .filter-chip {
+      border: 2px solid #E2E8F0;
+      background: white;
+      color: var(--text-main);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .filter-chip.active {
+      background: var(--text-main);
+      color: white;
+      border-color: var(--text-main);
+    }
+
+    .study-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid #E2E8F0;
+      margin-bottom: 12px;
+    }
+
+    .study-card.mastered {
+      border-color: var(--success);
+      background: #F0FDF4;
+    }
+
+    .sc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .sc-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .sc-title {
+      font-size: 1.28rem;
+      font-weight: 900;
+    }
+
+    .capital-box {
+      background: var(--gold-light);
+      border: 2px solid #FDE68A;
+      border-radius: 12px;
+      padding: 9px 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .capital-val {
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: var(--crimson-dark);
+    }
+
+    .capital-mask {
+      background: var(--gold);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .trick-box {
+      background: var(--bg-soft);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-master {
+      width: 100%;
+      padding: 11px;
+      border-radius: 12px;
+      border: 2px solid #CBD5E1;
+      background: white;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    .btn-master.active {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    /* QUIZ ENGINE */
+    .quiz-container {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .quiz-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .streak-badge {
+      background: var(--crimson-light);
+      color: var(--crimson);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .lives-badge {
+      background: #FEE2E2;
+      color: #DC2626;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .quiz-progress-track {
+      height: 8px;
+      background: var(--bg-soft);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .question-type-tag {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-size: 1.28rem;
+      font-weight: 900;
+      margin-bottom: 18px;
+      line-height: 1.35;
+    }
+
+    .question-highlight { color: var(--crimson); }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-app);
+      border: 2px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 15px 16px;
+      font-size: 1.04rem;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-btn.correct {
+      background: var(--success-light);
+      border-color: var(--success);
+      color: var(--success-dark);
+    }
+
+    .option-btn.wrong {
+      background: var(--danger-light);
+      border-color: var(--danger);
+      color: #991B1B;
+    }
+
+    .feedback-panel {
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .feedback-panel.is-correct {
+      background: var(--success-light);
+      border: 2px solid var(--success);
+      color: var(--success-dark);
+    }
+
+    .feedback-panel.is-wrong {
+      background: var(--danger-light);
+      border: 2px solid var(--danger);
+      color: #991B1B;
+    }
+
+    /* MAPA INTERACTIU MILLORAT */
+    .map-wrapper-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .map-mode-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-soft);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      gap: 4px;
+    }
+
+    .mode-switch-btn {
+      border: none;
+      background: transparent;
+      padding: 8px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .mode-switch-btn.active {
+      background: white;
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .map-prompt-box {
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+      border: 2px solid #93C5FD;
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .map-prompt-target {
+      font-size: 1.42rem;
+      font-weight: 900;
+      color: var(--crimson);
+      margin-top: 2px;
+    }
+
+    .svg-stage {
+      width: 100%;
+      background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 72%, #7DD3FC 100%);
+      border-radius: 18px;
+      border: 2px solid #7DD3FC;
+      overflow: hidden;
+      touch-action: manipulation;
+      box-shadow: inset 0 2px 10px rgba(3, 105, 161, 0.08);
+    }
+
+    .svg-stage svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .geo-shape {
+      stroke: #FFFFFF;
+      stroke-width: 1.7;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      cursor: pointer;
+      transition: fill 0.18s ease, filter 0.18s ease;
+    }
+
+    .geo-shape:hover {
+      filter: brightness(0.93);
+    }
+
+    .geo-shape.solved {
+      fill: #10B981 !important;
+      stroke: #064E3B;
+    }
+
+    .geo-shape.wrong-flash {
+      fill: #EF4444 !important;
+      stroke: #7F1D1D;
+    }
+
+    .geo-shape.reveal-correct {
+      fill: #F59E0B !important;
+      stroke: #78350F;
+    }
+
+    .geo-shape.explored-active {
+      fill: #E11D48 !important;
+      stroke: #881337;
+    }
+
+    .map-label {
+      font-size: 7.4px;
+      font-weight: 900;
+      fill: #0F172A;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+      user-select: none;
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.94);
+      stroke-width: 2.3px;
+      stroke-linejoin: round;
+    }
+
+    .map-label.light {
+      fill: #FFFFFF;
+      stroke: rgba(15, 23, 42, 0.65);
+    }
+
+    .map-sea-label {
+      font-size: 8.5px;
+      font-weight: 800;
+      font-style: italic;
+      fill: #0369A1;
+      opacity: 0.45;
+      letter-spacing: 0.12em;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .map-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    /* BOTONS */
+    .btn-primary {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 1.04rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      width: 100%;
+      background: var(--bg-soft);
+      color: var(--text-main);
+      border: none;
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .result-card {
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-score {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: var(--crimson);
+      margin: 10px 0;
+    }
+
+    .reset-zone {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed #CBD5E1;
+    }
+
+    .btn-reset {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <a id="btn-index" href="index.html" class="btn-back" title="Tornar a l'índex">🏠</a>
+      <button id="btn-back" class="btn-back hidden" aria-label="Tornar enrere">←</button>
+      <div>
+        <div id="header-title" class="app-title">Missió Espanya</div>
+        <div id="header-subtitle" class="app-subtitle">17 Comunitats · 50 Províncies</div>
+      </div>
+    </div>
+    <div class="stats-pill">
+      <span>⭐</span>
+      <span id="points-display">0</span>
+    </div>
+  </header>
+
+  <main id="app-root"></main>
+
+  <div id="reset-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div style="font-size: 2.5rem; margin-bottom: 8px;">🔄</div>
+      <h3 style="font-size: 1.2rem; font-weight: 900; margin-bottom: 8px;">Reiniciar progrés d'Espanya?</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">Es posaran a zero les comunitats, províncies i estrelles d'aquest curs.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button id="btn-cancel-reset" class="btn-secondary" style="margin-top:0;">Cancel·lar</button>
+        <button id="btn-confirm-reset" class="btn-primary" style="background:var(--crimson); padding:12px;">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. BASE DE DADES: 17 COMUNITATS + 2 CIUTATS AUTÒNOMES + 50 PROVÍNCIES
+       ========================================================================== */
+    const COMUNITATS = [
+      { id: "galicia", nom: "Galícia", capital: "Santiago de Compostel·la", tipus: "Comunitat", color: "#93C5FD",
+        truc: "A l'extrem nord-oest, on acaba el Camí de Sant Jaume (Santiago).",
+        d: "M 38,48 Q 76,34 116,42 L 122,104 Q 78,112 42,106 Q 28,78 38,48 Z", cx: 79, cy: 74 },
+      { id: "asturies", nom: "Astúries", capital: "Oviedo", tipus: "Uniprovincial", color: "#6EE7B7",
+        truc: "Té una sola província (Astúries) i la capital és Oviedo.",
+        d: "M 116,42 Q 162,38 206,44 L 206,70 L 120,70 Z", cx: 162, cy: 56 },
+      { id: "cantabria", nom: "Cantàbria", capital: "Santander", tipus: "Uniprovincial", color: "#5EEAD4",
+        truc: "Uniprovincial al mar Cantàbric; capital Santander.",
+        d: "M 206,44 Q 238,40 266,46 L 266,72 L 206,72 Z", cx: 236, cy: 58 },
+      { id: "pais-basc", nom: "País Basc", capital: "Vitòria", tipus: "Comunitat", color: "#86EFAC",
+        truc: "3 províncies (Àlaba, Biscaia, Guipúscoa). La seu del govern és Vitòria-Gasteiz.",
+        d: "M 266,46 Q 296,42 322,48 L 316,78 L 266,78 Z", cx: 293, cy: 62 },
+      { id: "navarra", nom: "Navarra", capital: "Pamplona", tipus: "Uniprovincial", color: "#FCA5A5",
+        truc: "Uniprovincial als Pirineus occidentals; famosa pels Sanfermines de Pamplona.",
+        d: "M 322,48 Q 348,46 370,56 L 358,108 L 314,102 L 316,78 Z", cx: 342, cy: 77 },
+      { id: "la-rioja", nom: "La Rioja", capital: "Logronyo", tipus: "Uniprovincial", color: "#FDBA74",
+        truc: "La comunitat més petita de la península, famosa pel vi; capital Logronyo.",
+        d: "M 272,78 L 316,78 L 322,106 L 274,104 Z", cx: 297, cy: 92 },
+      { id: "arago", nom: "Aragó", capital: "Saragossa", tipus: "Comunitat", color: "#FDE047",
+        truc: "3 províncies verticals (Osca, Saragossa, Terol); capital al centre: Saragossa.",
+        d: "M 370,56 Q 408,58 446,68 L 434,194 L 356,186 L 358,108 Z", cx: 402, cy: 126 },
+      { id: "catalunya", nom: "Catalunya", capital: "Barcelona", tipus: "Comunitat", color: "#FDA4AF",
+        truc: "4 províncies (Barcelona, Girona, Lleida, Tarragona); capital Barcelona.",
+        d: "M 446,68 Q 498,66 544,82 Q 534,118 514,148 L 464,194 L 434,178 Z", cx: 486, cy: 128 },
+      { id: "castella-lleo", nom: "Castella i Lleó", capital: "Valladolid", tipus: "Comunitat", color: "#FCD34D",
+        truc: "La més gran d'Espanya amb 9 províncies! La seu autonòmica és Valladolid.",
+        d: "M 120,70 L 272,72 L 274,104 L 314,106 L 296,174 L 122,172 Z", cx: 205, cy: 124 },
+      { id: "madrid", nom: "Comunitat de Madrid", capital: "Madrid", tipus: "Uniprovincial", color: "#F87171",
+        truc: "Al bell mig de la península; capital d'Espanya i de la comunitat: Madrid.",
+        d: "M 226,168 Q 250,164 272,170 L 270,214 Q 246,218 224,212 Z", cx: 248, cy: 191 },
+      { id: "extremadura", nom: "Extremadura", capital: "Mèrida", tipus: "Comunitat", color: "#A7F3D0",
+        truc: "2 províncies grans (Càceres i Badajoz), però la capital autonòmica és Mèrida!",
+        d: "M 104,172 L 194,172 L 192,284 Q 144,286 102,278 Z", cx: 148, cy: 228 },
+      { id: "castella-manxa", nom: "Castella-la Manxa", capital: "Toledo", tipus: "Comunitat", color: "#FED7AA",
+        truc: "5 províncies (la terra del Quixot); capital històrica: Toledo.",
+        d: "M 194,172 L 226,172 L 224,212 L 270,214 L 272,174 L 356,184 L 352,276 L 192,276 Z", cx: 278, cy: 232 },
+      { id: "valencia", nom: "Comunitat Valenciana", capital: "València", tipus: "Comunitat", color: "#7DD3FC",
+        truc: "3 províncies a la costa mediterrània (Castelló, València, Alacant); capital València.",
+        d: "M 434,184 L 464,194 Q 458,248 442,296 L 398,292 L 404,228 Z", cx: 432, cy: 242 },
+      { id: "murcia", nom: "Regió de Múrcia", capital: "Múrcia", tipus: "Uniprovincial", color: "#C4B5FD",
+        truc: "Uniprovincial al sud-est mediterrani; capital Múrcia.",
+        d: "M 352,268 L 404,272 L 398,320 Q 372,324 348,316 Z", cx: 376, cy: 295 },
+      { id: "andalusia", nom: "Andalusia", capital: "Sevilla", tipus: "Comunitat", color: "#86EFAC",
+        truc: "8 províncies al sud d'Espanya; capital Sevilla.",
+        d: "M 102,278 L 352,276 L 348,316 L 368,348 Q 298,376 234,382 Q 172,374 116,354 Z", cx: 230, cy: 328 },
+      { id: "balears", nom: "Illes Balears", capital: "Palma", tipus: "Uniprovincial", color: "#38BDF8",
+        truc: "Arxipèlag mediterrani (Mallorca, Menorca, Eivissa, Formentera); capital Palma.",
+        d: "M 492,218 Q 510,212 522,226 Q 508,240 492,234 Z M 532,202 Q 554,196 566,208 Q 550,220 532,212 Z M 524,228 Q 558,222 572,240 Q 556,256 524,248 Z", cx: 536, cy: 226 },
+      { id: "canaries", nom: "Canàries", capital: "Las Palmas de Gran Canaria i Santa Cruz de Tenerife", tipus: "Comunitat", color: "#FBBF24",
+        truc: "Comparteix capitalitat entre les dues províncies insulars atlàntiques!",
+        d: "M 34,358 Q 48,350 56,362 Q 46,372 34,366 Z M 68,364 Q 82,358 88,370 Q 78,380 68,372 Z M 96,342 Q 112,338 114,364 Q 100,368 96,352 Z", cx: 74, cy: 360 },
+      { id: "ceuta", nom: "Ceuta", capital: "Ceuta", tipus: "Ciutat Autònoma", color: "#F472B6",
+        truc: "Ciutat autònoma al nord d'Àfrica, davant l'estret de Gibraltar.",
+        d: "M 188,392 Q 204,388 218,396 Q 204,406 188,400 Z", cx: 203, cy: 397 },
+      { id: "melilla", nom: "Melilla", capital: "Melilla", tipus: "Ciutat Autònoma", color: "#FB7185",
+        truc: "Ciutat autònoma al nord d'Àfrica, més a l'est que Ceuta.",
+        d: "M 262,392 Q 278,388 292,396 Q 278,406 262,400 Z", cx: 277, cy: 397 }
+    ];
+
+    const PROVINCIES = [
+      // Galícia (4)
+      { id: "a-coruna", nom: "La Corunya", capital: "La Corunya", comId: "galicia", comNom: "Galícia", truc: "Mateix nom que la capital, al nord-oest de Galícia." },
+      { id: "lugo", nom: "Lugo", capital: "Lugo", comId: "galicia", comNom: "Galícia", truc: "Mateix nom que la capital, famosa per la muralla romana." },
+      { id: "ourense", nom: "Ourense", capital: "Ourense", comId: "galicia", comNom: "Galícia", truc: "Única província gallega sense mar (interior sud)." },
+      { id: "pontevedra", nom: "Pontevedra", capital: "Pontevedra", comId: "galicia", comNom: "Galícia", truc: "A les Rías Baixas, al sud-oest de Galícia." },
+      // Uniprovincials del nord i centre
+      { id: "asturies-p", nom: "Astúries", capital: "Oviedo", comId: "asturies", comNom: "Astúries", truc: "Atenció! La província es diu Astúries, però la capital és Oviedo." },
+      { id: "cantabria-p", nom: "Cantàbria", capital: "Santander", comId: "cantabria", comNom: "Cantàbria", truc: "La província és Cantàbria i la capital és Santander." },
+      // País Basc (3)
+      { id: "alaba", nom: "Àlaba", capital: "Vitòria", comId: "pais-basc", comNom: "País Basc", truc: "La més gran del País Basc; capital Vitòria-Gasteiz." },
+      { id: "biscaia", nom: "Biscaia", capital: "Bilbao", comId: "pais-basc", comNom: "País Basc", truc: "Biscaia comença per B com la seva capital: Bilbao!" },
+      { id: "guipuscoa", nom: "Guipúscoa", capital: "Sant Sebastià", comId: "pais-basc", comNom: "País Basc", truc: "Toca França; capital Sant Sebastià (Donostia)." },
+      // Navarra i La Rioja
+      { id: "navarra-p", nom: "Navarra", capital: "Pamplona", comId: "navarra", comNom: "Navarra", truc: "Província de Navarra → capital Pamplona." },
+      { id: "la-rioja-p", nom: "La Rioja", capital: "Logronyo", comId: "la-rioja", comNom: "La Rioja", truc: "Província de La Rioja → capital Logronyo." },
+      // Aragó (3)
+      { id: "osca", nom: "Osca", capital: "Osca", comId: "arago", comNom: "Aragó", truc: "Al nord d'Aragó, als Pirineus; mateix nom." },
+      { id: "saragossa", nom: "Saragossa", capital: "Saragossa", comId: "arago", comNom: "Aragó", truc: "Al centre d'Aragó; mateix nom." },
+      { id: "terol", nom: "Terol", capital: "Terol", comId: "arago", comNom: "Aragó", truc: "Al sud d'Aragó; mateix nom." },
+      // Catalunya (4)
+      { id: "barcelona", nom: "Barcelona", capital: "Barcelona", comId: "catalunya", comNom: "Catalunya", truc: "Mateix nom que la capital." },
+      { id: "girona", nom: "Girona", capital: "Girona", comId: "catalunya", comNom: "Catalunya", truc: "Al nord-est de Catalunya; mateix nom." },
+      { id: "lleida", nom: "Lleida", capital: "Lleida", comId: "catalunya", comNom: "Catalunya", truc: "A l'oest de Catalunya; mateix nom." },
+      { id: "tarragona", nom: "Tarragona", capital: "Tarragona", comId: "catalunya", comNom: "Catalunya", truc: "Al sud de Catalunya; mateix nom." },
+      // Castella i Lleó (9)
+      { id: "lleo", nom: "Lleó", capital: "Lleó", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Al nord-oest de Castella i Lleó; mateix nom." },
+      { id: "palencia", nom: "Palència", capital: "Palència", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Al nord; mateix nom." },
+      { id: "burgos", nom: "Burgos", capital: "Burgos", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Al nord-est; mateix nom." },
+      { id: "soria", nom: "Sòria", capital: "Sòria", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "A l'est, tocant Aragó; mateix nom." },
+      { id: "segovia", nom: "Segòvia", capital: "Segòvia", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Famosa per l'aqüeducte romà; mateix nom." },
+      { id: "avila", nom: "Àvila", capital: "Àvila", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Famosa per les muralles; mateix nom." },
+      { id: "salamanca", nom: "Salamanca", capital: "Salamanca", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Al sud-oest, tocant Portugal; mateix nom." },
+      { id: "zamora", nom: "Zamora", capital: "Zamora", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "A l'oest, tocant Portugal; mateix nom." },
+      { id: "valladolid", nom: "Valladolid", capital: "Valladolid", comId: "castella-lleo", comNom: "Castella i Lleó", truc: "Al centre de totes les altres províncies de Castella i Lleó." },
+      // Madrid
+      { id: "madrid-p", nom: "Madrid", capital: "Madrid", comId: "madrid", comNom: "Comunitat de Madrid", truc: "Mateix nom que la capital." },
+      // Extremadura (2)
+      { id: "caceres", nom: "Càceres", capital: "Càceres", comId: "extremadura", comNom: "Extremadura", truc: "La província nord d'Extremadura; mateix nom." },
+      { id: "badajoz", nom: "Badajoz", capital: "Badajoz", comId: "extremadura", comNom: "Extremadura", truc: "La província més extensa d'Espanya, al sud d'Extremadura." },
+      // Castella-la Manxa (5)
+      { id: "guadalajara", nom: "Guadalajara", capital: "Guadalajara", comId: "castella-manxa", comNom: "Castella-la Manxa", truc: "Al nord-est de Madrid; mateix nom." },
+      { id: "toledo", nom: "Toledo", capital: "Toledo", comId: "castella-manxa", comNom: "Castella-la Manxa", truc: "Al sud de Madrid; mateix nom." },
+      { id: "conca", nom: "Conca", capital: "Conca", comId: "castella-manxa", comNom: "Castella-la Manxa", truc: "A l'est, famosa per les cases penjades; mateix nom." },
+      { id: "ciudad-real", nom: "Ciudad Real", capital: "Ciudad Real", comId: "castella-manxa", comNom: "Castella-la Manxa", truc: "Al sud-oest de Castella-la Manxa; mateix nom." },
+      { id: "albacete", nom: "Albacete", capital: "Albacete", comId: "castella-manxa", comNom: "Castella-la Manxa", truc: "Al sud-est, camí de Múrcia i Alacant; mateix nom." },
+      // Comunitat Valenciana (3)
+      { id: "castello", nom: "Castelló", capital: "Castelló de la Plana", comId: "valencia", comNom: "Comunitat Valenciana", truc: "La més al nord de la Comunitat Valenciana." },
+      { id: "valencia-p", nom: "València", capital: "València", comId: "valencia", comNom: "Comunitat Valenciana", truc: "Al centre; mateix nom." },
+      { id: "alacant", nom: "Alacant", capital: "Alacant", comId: "valencia", comNom: "Comunitat Valenciana", truc: "La més al sud de la Comunitat Valenciana." },
+      // Múrcia
+      { id: "murcia-p", nom: "Múrcia", capital: "Múrcia", comId: "murcia", comNom: "Regió de Múrcia", truc: "Mateix nom que la capital." },
+      // Andalusia (8)
+      { id: "huelva", nom: "Huelva", capital: "Huelva", comId: "andalusia", comNom: "Andalusia", truc: "A l'extrem sud-oest, tocant Portugal i l'Atlàntic." },
+      { id: "sevilla", nom: "Sevilla", capital: "Sevilla", comId: "andalusia", comNom: "Andalusia", truc: "Capital d'Andalusia; mateix nom." },
+      { id: "cadis", nom: "Cadis", capital: "Cadis", comId: "andalusia", comNom: "Andalusia", truc: "La més al sud de la península (estret de Gibraltar)." },
+      { id: "cordoba", nom: "Còrdova", capital: "Còrdova", comId: "andalusia", comNom: "Andalusia", truc: "Al nord d'Andalusia, famosa per la Mesquita." },
+      { id: "malaga", nom: "Màlaga", capital: "Màlaga", comId: "andalusia", comNom: "Andalusia", truc: "Costa del Sol; mateix nom." },
+      { id: "jaen", nom: "Jaén", capital: "Jaén", comId: "andalusia", comNom: "Andalusia", truc: "Terra d'oliveres al nord-est d'Andalusia." },
+      { id: "granada", nom: "Granada", capital: "Granada", comId: "andalusia", comNom: "Andalusia", truc: "On hi ha l'Alhambra i Sierra Nevada." },
+      { id: "almeria", nom: "Almeria", capital: "Almeria", comId: "andalusia", comNom: "Andalusia", truc: "A l'extrem sud-est d'Andalusia." },
+      // Illes Balears i Canàries (3)
+      { id: "balears-p", nom: "Illes Balears", capital: "Palma", comId: "balears", comNom: "Illes Balears", truc: "Atenció! La província és Illes Balears i la capital és Palma." },
+      { id: "las-palmas", nom: "Las Palmas", capital: "Las Palmas de Gran Canaria", comId: "canaries", comNom: "Canàries", truc: "Les illes orientals de Canàries (Gran Canària, Lanzarote, Fuerteventura)." },
+      { id: "santa-cruz", nom: "Santa Cruz de Tenerife", capital: "Santa Cruz de Tenerife", comId: "canaries", comNom: "Canàries", truc: "Les illes occidentals de Canàries (Tenerife, La Palma, La Gomera, El Hierro)." }
+    ];
+
+    /* ==========================================================================
+       2. ESTAT I PERSISTÈNCIA
+       ========================================================================== */
+    const STORAGE_KEY = "missio_espanya_v1";
+
+    let state = {
+      masteredComs: [],
+      masteredProvs: [],
+      points: 0,
+      bestSurvival: 0
+    };
+
+    let nav = {
+      view: "home", // "home" | "fase1" | "fase2" | "quiz" | "map"
+      tab: "study", // "study" | "quiz" | "map"
+      provFilter: "all",
+      hiddenCapitals: {},
+      quiz: null,
+      map: null
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = {
+            masteredComs: Array.isArray(parsed.masteredComs) ? parsed.masteredComs : [],
+            masteredProvs: Array.isArray(parsed.masteredProvs) ? parsed.masteredProvs : [],
+            points: typeof parsed.points === "number" ? parsed.points : 0,
+            bestSurvival: typeof parsed.bestSurvival === "number" ? parsed.bestSurvival : 0
+          };
+        }
+      } catch (e) {}
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+      document.getElementById("points-display").textContent = state.points;
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    /* ==========================================================================
+       3. GENERADOR MASSIU DE PREGUNTES (COMUNITATS, PROVÍNCIES I CAPITALS)
+       ========================================================================== */
+    function makeComQuestion(item) {
+      const others = shuffle(COMUNITATS.filter(c => c.id !== item.id));
+      const mode = Math.floor(Math.random() * 3);
+
+      if (mode === 0) {
+        return {
+          trackId: item.id,
+          trackType: "com",
+          tag: "Capital Autonòmica",
+          promptHtml: `Quina és la capital de <span class="question-highlight">${item.nom}</span>?`,
+          correct: item.capital,
+          options: shuffle([item.capital, ...others.slice(0, 3).map(o => o.capital)])
+        };
+      }
+      if (mode === 1) {
+        return {
+          trackId: item.id,
+          trackType: "com",
+          tag: "Comunitat Autònoma",
+          promptHtml: `De quina comunitat o ciutat autònoma és capital <span class="question-highlight">${item.capital}</span>?`,
+          correct: item.nom,
+          options: shuffle([item.nom, ...others.slice(0, 3).map(o => o.nom)])
+        };
+      }
+      const isUni = item.tipus === "Uniprovincial";
+      const poolUni = shuffle(COMUNITATS.filter(c => (c.tipus === "Uniprovincial") !== isUni));
+      return {
+        trackId: item.id,
+        trackType: "com",
+        tag: "Tipus de Comunitat",
+        promptHtml: isUni
+          ? `Quina d'aquestes comunitats és <strong>uniprovincial</strong> (només té 1 província)?`
+          : `Quina d'aquestes comunitats té <strong>més d'una província</strong>?`,
+        correct: item.nom,
+        options: shuffle([item.nom, ...poolUni.slice(0, 3).map(o => o.nom)])
+      };
+    }
+
+    function makeProvQuestion(item) {
+      const others = shuffle(PROVINCIES.filter(p => p.id !== item.id));
+      const diffComs = shuffle(COMUNITATS.filter(c => c.tipus === "Comunitat" && c.id !== item.comId));
+      const mode = Math.floor(Math.random() * 3);
+
+      if (mode === 0) {
+        return {
+          trackId: item.id,
+          trackType: "prov",
+          tag: "Pertinença a Comunitat",
+          promptHtml: `A quina comunitat autònoma pertany la província de <span class="question-highlight">${item.nom}</span>?`,
+          correct: item.comNom,
+          options: shuffle([item.comNom, ...diffComs.slice(0, 3).map(c => c.nom)])
+        };
+      }
+      if (mode === 1) {
+        const distractors = shuffle([
+          ...others.filter(o => o.capital !== item.capital).slice(0, 3)
+        ]).map(o => o.capital);
+        return {
+          trackId: item.id,
+          trackType: "prov",
+          tag: "Capital de Província",
+          promptHtml: `Quina és la capital de la província de <span class="question-highlight">${item.nom}</span>?`,
+          correct: item.capital,
+          options: shuffle([item.capital, ...distractors])
+        };
+      }
+      const otherComProvs = shuffle(PROVINCIES.filter(p => p.comId !== item.comId));
+      return {
+        trackId: item.id,
+        trackType: "prov",
+        tag: "Província de la Comunitat",
+        promptHtml: `Quina d'aquestes províncies pertany a <span class="question-highlight">${item.comNom}</span>?`,
+        correct: item.nom,
+        options: shuffle([item.nom, ...otherComProvs.slice(0, 3).map(p => p.nom)])
+      };
+    }
+
+    function buildQuestionBatch(scope, count) {
+      const list = [];
+      while (list.length < count) {
+        if (scope === "com") {
+          shuffle(COMUNITATS).forEach(c => list.push(makeComQuestion(c)));
+        } else if (scope === "prov") {
+          shuffle(PROVINCIES).forEach(p => list.push(makeProvQuestion(p)));
+        } else {
+          const mixed = [
+            ...shuffle(COMUNITATS).map(c => makeComQuestion(c)),
+            ...shuffle(PROVINCIES).map(p => makeProvQuestion(p))
+          ];
+          shuffle(mixed).forEach(q => list.push(q));
+        }
+      }
+      return list.slice(0, count);
+    }
+
+    /* ==========================================================================
+       4. MOTOR DE TESTS (NORMAL + SUPERVIVÈNCIA)
+       ========================================================================== */
+    function startQuiz(scope, count, title, survival = false) {
+      nav.view = "quiz";
+      nav.quiz = {
+        scope,
+        title,
+        survival,
+        lives: 3,
+        questions: buildQuestionBatch(scope, survival ? 200 : count),
+        index: 0,
+        score: 0,
+        streak: 0,
+        answered: false,
+        selected: null,
+        isCorrect: false,
+        finished: false
+      };
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function submitQuizAnswer(opt) {
+      const q = nav.quiz;
+      if (!q || q.answered) return;
+
+      const current = q.questions[q.index];
+      const ok = opt === current.correct;
+
+      q.answered = true;
+      q.selected = opt;
+      q.isCorrect = ok;
+
+      if (ok) {
+        q.score += 1;
+        q.streak += 1;
+        state.points += 10;
+
+        if (current.trackType === "com" && !state.masteredComs.includes(current.trackId)) {
+          state.masteredComs.push(current.trackId);
+        }
+        if (current.trackType === "prov" && !state.masteredProvs.includes(current.trackId)) {
+          state.masteredProvs.push(current.trackId);
+        }
+        if (q.survival && q.score > state.bestSurvival) {
+          state.bestSurvival = q.score;
+        }
+      } else {
+        q.streak = 0;
+        if (q.survival) {
+          q.lives -= 1;
+        }
+      }
+
+      saveState();
+      render();
+    }
+
+    function nextQuizStep() {
+      const q = nav.quiz;
+      if (!q) return;
+
+      if (q.survival && q.lives <= 0) {
+        q.finished = true;
+        render();
+        return;
+      }
+
+      if (q.index + 1 < q.questions.length) {
+        q.index += 1;
+        q.answered = false;
+        q.selected = null;
+        q.isCorrect = false;
+        if (q.survival && q.index > q.questions.length - 10) {
+          q.questions.push(...buildQuestionBatch(q.scope, 50));
+        }
+      } else {
+        q.finished = true;
+      }
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* ==========================================================================
+       5. MOTOR DE MAPA DE COMUNITATS AUTÒNOMES
+       ========================================================================== */
+    function initMap(mode = "locate") {
+      nav.map = {
+        mode,
+        queue: shuffle(COMUNITATS),
+        index: 0,
+        solved: [],
+        score: 0,
+        answered: false,
+        clickedId: null,
+        isCorrect: false,
+        finished: false,
+        exploredId: "catalunya"
+      };
+    }
+
+    function openStandaloneMap() {
+      nav.view = "map";
+      initMap("locate");
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function handleMapTap(id) {
+      const m = nav.map;
+      if (!m) return;
+
+      if (m.mode === "explore") {
+        m.exploredId = id;
+        render();
+        return;
+      }
+
+      if (m.answered) return;
+      const target = m.queue[m.index];
+      const ok = id === target.id;
+      m.answered = true;
+      m.clickedId = id;
+      m.isCorrect = ok;
+
+      if (ok) {
+        m.score += 1;
+        state.points += 10;
+        if (!m.solved.includes(id)) m.solved.push(id);
+        if (!state.masteredComs.includes(id)) state.masteredComs.push(id);
+      }
+      saveState();
+      render();
+    }
+
+    function nextMapStep() {
+      const m = nav.map;
+      if (m.index + 1 < m.queue.length) {
+        m.index += 1;
+        m.answered = false;
+        m.clickedId = null;
+      } else {
+        m.finished = true;
+      }
+      render();
+    }
+
+    function renderMapBlock() {
+      if (!nav.map) initMap("locate");
+      const m = nav.map;
+
+      if (m.mode === "locate" && m.finished) {
+        return `
+          <div class="result-card">
+            <div style="font-size:3.5rem;">🗺️🏆</div>
+            <h2 style="font-size:1.5rem; font-weight:900; margin-top:8px;">Test Mapa Completat!</h2>
+            <div class="result-score">${m.score} / ${m.queue.length}</div>
+            <p style="color:var(--text-muted); margin-bottom:18px;">
+              Has situat ${m.score} de ${m.queue.length} comunitats i ciutats autònomes al mapa.
+            </p>
+            <button class="btn-primary" onclick="initMap('locate'); render();">🔄 Tornar a fer el Test Mapa</button>
+            <button class="btn-secondary" onclick="goHome()">🏠 Tornar a l'inici</button>
+          </div>
+        `;
+      }
+
+      const target = m.mode === "locate" ? m.queue[m.index] : null;
+      const explored = m.mode === "explore" ? COMUNITATS.find(c => c.id === m.exploredId) : null;
+
+      const shapes = COMUNITATS.map(c => {
+        let cls = ["geo-shape"];
+        let showLbl = false;
+        let light = false;
+
+        if (m.mode === "explore") {
+          showLbl = true;
+          if (c.id === explored.id) { cls.push("explored-active"); light = true; }
+        } else {
+          if (m.solved.includes(c.id)) { cls.push("solved"); showLbl = true; light = true; }
+          if (m.answered) {
+            if (c.id === target.id && !m.isCorrect) { cls.push("reveal-correct"); showLbl = true; light = true; }
+            if (c.id === m.clickedId && !m.isCorrect) { cls.push("wrong-flash"); showLbl = true; light = true; }
+          }
+        }
+
+        const shortName = c.nom
+          .replace("Comunitat de ", "")
+          .replace("Comunitat ", "")
+          .replace("Regió de ", "")
+          .replace("Castella i Lleó", "Cast. i Lleó")
+          .replace("Castella-la Manxa", "Cast.-Manxa");
+
+        return `
+          <path d="${c.d}" fill="${c.color}" class="${cls.join(" ")}" onclick="handleMapTap('${c.id}')"></path>
+          ${showLbl ? `<text x="${c.cx}" y="${c.cy}" class="map-label ${light ? "light" : ""}">${shortName}</text>` : ""}
+        `;
+      }).join("");
+
+      return `
+        <div class="map-wrapper-card">
+          <div class="map-mode-switch">
+            <button class="mode-switch-btn ${m.mode === "locate" ? "active" : ""}" onclick="initMap('locate'); render();">🎯 Test Mapa (Situar)</button>
+            <button class="mode-switch-btn ${m.mode === "explore" ? "active" : ""}" onclick="initMap('explore'); render();">🧭 Explorar lliurement</button>
+          </div>
+
+          ${m.mode === "locate" ? `
+            <div class="quiz-top-bar">
+              <span>Repte ${m.index + 1} de ${m.queue.length}</span>
+              <span>Encerts: ${m.score}</span>
+            </div>
+            <div class="map-prompt-box">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--primary-dark);">TOCA AL MAPA ON ES TROBA:</div>
+              <div class="map-prompt-target">📍 ${target.nom}</div>
+            </div>
+          ` : `
+            <div style="background:var(--gold-light); border:2px solid #FDE68A; border-radius:14px; padding:12px; margin-bottom:12px;">
+              <div style="font-size:1.22rem; font-weight:900;">${explored.nom}</div>
+              <div style="font-size:0.9rem; font-weight:700; color:var(--crimson-dark);">🏛️ Capital: ${explored.capital} · (${explored.tipus})</div>
+              <div style="font-size:0.86rem; color:var(--text-muted); margin-top:4px;">💡 ${explored.truc}</div>
+            </div>
+          `}
+
+          <div class="svg-stage">
+            <svg viewBox="20 28 562 388" role="img" aria-label="Mapa de Comunitats Autònomes d'Espanya">
+              <text x="485" y="295" class="map-sea-label">MAR MEDITERRÀNIA</text>
+              <text x="52" y="152" class="map-sea-label">ATLÀNTIC</text>
+              <rect x="26" y="330" width="96" height="58" rx="10" fill="rgba(255,255,255,0.35)" stroke="#0284C7" stroke-dasharray="3 3" stroke-width="1.2"></rect>
+              <text x="74" y="325" font-size="6.8px" font-weight="800" fill="#0369A1" text-anchor="middle">ILLES CANÀRIES</text>
+              <text x="240" y="412" font-size="6.5px" font-weight="800" fill="#0369A1" text-anchor="middle">CIUTATS AUTÒNOMES (NORD D'ÀFRICA)</text>
+              ${shapes}
+            </svg>
+          </div>
+
+          <div class="map-legend">
+            <span><i class="dot" style="background:#10B981;"></i>Encertada</span>
+            <span><i class="dot" style="background:#F59E0B;"></i>Resposta correcta</span>
+            <span><i class="dot" style="background:#EF4444;"></i>Error</span>
+          </div>
+
+          ${m.mode === "locate" && m.answered ? `
+            <div class="feedback-panel ${m.isCorrect ? "is-correct" : "is-wrong"}" style="margin-top:12px;">
+              ${m.isCorrect
+                ? `🌟 Exacte! ${target.nom} · Capital: ${target.capital} (+10 punts)`
+                : `❌ Has tocat ${COMUNITATS.find(c => c.id === m.clickedId)?.nom || "una altra zona"}. La correcta és ${target.nom} (en taronja).`}
+            </div>
+            <button class="btn-primary" onclick="nextMapStep()">
+              ${m.index + 1 < m.queue.length ? "Següent comunitat →" : "Veure resultat 🏆"}
+            </button>
+          ` : ""}
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       6. RENDERITZAT DE VISTES
+       ========================================================================== */
+    function goHome() {
+      nav.view = "home";
+      nav.quiz = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openPhase(phaseView) {
+      nav.view = phaseView;
+      nav.tab = "study";
+      nav.provFilter = "all";
+      if (phaseView === "fase1") initMap("locate");
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateHeader() {
+      saveState();
+      const isHome = nav.view === "home";
+      document.getElementById("btn-index").classList.toggle("hidden", !isHome);
+      document.getElementById("btn-back").classList.toggle("hidden", isHome);
+
+      const title = document.getElementById("header-title");
+      const sub = document.getElementById("header-subtitle");
+
+      if (nav.view === "home") {
+        title.textContent = "Missió Espanya";
+        sub.textContent = "17 Comunitats · 50 Províncies";
+      } else if (nav.view === "fase1") {
+        title.textContent = "Fase 1: Comunitats";
+        sub.textContent = "17 Comunitats + Ceuta i Melilla";
+      } else if (nav.view === "fase2") {
+        title.textContent = "Fase 2: Províncies";
+        sub.textContent = "Les 50 províncies i les seves capitals";
+      } else if (nav.view === "map") {
+        title.textContent = "Test Mapa Comunitats";
+        sub.textContent = "Situa cada comunitat al mapa";
+      } else if (nav.view === "quiz") {
+        title.textContent = nav.quiz.title;
+        sub.textContent = nav.quiz.survival ? "Mode 3 vides" : `${nav.quiz.questions.length} preguntes aleatòries`;
+      }
+    }
+
+    function render() {
+      updateHeader();
+      const root = document.getElementById("app-root");
+
+      if (nav.view === "map") {
+        root.innerHTML = renderMapBlock();
+        return;
+      }
+
+      if (nav.view === "home") {
+        const comPct = Math.round((state.masteredComs.length / COMUNITATS.length) * 100);
+        const provPct = Math.round((state.masteredProvs.length / PROVINCIES.length) * 100);
+
+        root.innerHTML = `
+          <div class="progress-hero">
+            <div style="font-weight:900; color:var(--primary-dark); margin-bottom:10px;">El teu progrés en 2 passos</div>
+            <div class="progress-dual-grid">
+              <div class="prog-box">
+                <div class="prog-box-top">
+                  <span>1. Comunitats</span>
+                  <span>${state.masteredComs.length}/${COMUNITATS.length}</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${comPct}%"></div></div>
+              </div>
+              <div class="prog-box">
+                <div class="prog-box-top">
+                  <span>2. Províncies</span>
+                  <span>${state.masteredProvs.length}/${PROVINCIES.length}</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${provPct}%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">Pas a pas: Estudi i Mapa</div>
+
+          <div class="phase-card phase-1" onclick="openPhase('fase1')">
+            <div class="phase-icon" style="background:var(--primary-light);">🗺️</div>
+            <div class="phase-info">
+              <div class="phase-tag" style="color:var(--primary);">PAS 1 · PRIMER APRÈN AIXÒ</div>
+              <div class="phase-title">Comunitats Autònomes (17 + 2)</div>
+              <div class="phase-desc">Fitxes amb trucs, capitals autonòmiques i mapa interactiu per situar-les.</div>
+            </div>
+            <div class="pill-go" style="background:var(--primary-light); color:var(--primary-dark);">Entrar →</div>
+          </div>
+
+          <div class="phase-card phase-2" onclick="openPhase('fase2')">
+            <div class="phase-icon" style="background:var(--emerald-light);">🏛️</div>
+            <div class="phase-info">
+              <div class="phase-tag" style="color:var(--emerald);">PAS 2 · DESPRÉS LES PROVÍNCIES</div>
+              <div class="phase-title">Les 50 Províncies d'Espanya</div>
+              <div class="phase-desc">Agrupades per comunitat amb les seves capitals i trucs de memòria.</div>
+            </div>
+            <div class="pill-go" style="background:var(--emerald-light); color:var(--success-dark);">Entrar →</div>
+          </div>
+
+          <div class="section-label">Gimnàs de Tests (Repassa sense parar!)</div>
+          <div class="tests-grid">
+            <div class="test-launcher bg-teal" onclick="openStandaloneMap()">
+              <div class="tl-top">
+                <div class="tl-title">🗺️ Test Mapa Comunitats</div>
+                <span class="tl-badge">19 zones</span>
+              </div>
+              <div class="tl-desc">Toca cada comunitat al mapa per situar-la correctament.</div>
+            </div>
+
+            <div class="test-launcher bg-blue" onclick="startQuiz('com', 35, 'Test Fase 1: Comunitats')">
+              <div class="tl-top">
+                <div class="tl-title">🎯 Test Comunitats</div>
+                <span class="tl-badge">35 preg.</span>
+              </div>
+              <div class="tl-desc">Comunitats, capitals autonòmiques i uniprovincials.</div>
+            </div>
+
+            <div class="test-launcher bg-emerald" onclick="startQuiz('prov', 50, 'Test Fase 2: Províncies (50)')">
+              <div class="tl-top">
+                <div class="tl-title">🏛️ Test Províncies</div>
+                <span class="tl-badge">50 preg.</span>
+              </div>
+              <div class="tl-desc">De quina comunitat és cada província i la seva capital.</div>
+            </div>
+
+            <div class="test-launcher bg-purple" onclick="startQuiz('prov', 100, 'Marató 100 Províncies')">
+              <div class="tl-top">
+                <div class="tl-title">🚀 Marató Províncies</div>
+                <span class="tl-badge">100 preg.</span>
+              </div>
+              <div class="tl-desc">Entrenament intensiu per no fallar ni una sola província.</div>
+            </div>
+          </div>
+
+          <div class="test-launcher bg-amber" style="margin-bottom:12px;" onclick="startQuiz('all', 200, 'Supervivència 3 Vides', true)">
+            <div class="tl-top">
+              <div class="tl-title">❤️‍🔥 Supervivència (3 Vides)</div>
+              <span class="tl-badge">Rècord: ${state.bestSurvival}</span>
+            </div>
+            <div class="tl-desc">Preguntes infinites barrejades fins que fallis 3 cops!</div>
+          </div>
+
+          <div class="test-launcher bg-crimson" style="margin-bottom:16px;" onclick="startQuiz('all', 100, 'Gran Examen Final Espanya')">
+            <div class="tl-top">
+              <div class="tl-title" style="font-size:1.18rem;">🏆 Gran Examen Final (100 Preguntes)</div>
+              <span class="tl-badge">TOT BARREJAT</span>
+            </div>
+            <div class="tl-desc">Comunitats Autònomes + 50 Províncies + Capitals. Ideal abans de l'examen!</div>
+          </div>
+
+          <div class="reset-zone">
+            <button class="btn-reset" onclick="document.getElementById('reset-modal').classList.remove('hidden')">Reiniciar progrés d'Espanya</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (nav.view === "fase1") {
+        let body = "";
+        if (nav.tab === "study") {
+          body = `
+            <button class="btn-primary" style="margin-bottom:14px;" onclick="startQuiz('com', 35, 'Test Fase 1: Comunitats')">
+              🎯 Fer Test de Comunitats (35 preguntes)
+            </button>
+            ${COMUNITATS.map(c => {
+              const done = state.masteredComs.includes(c.id);
+              const hid = !!nav.hiddenCapitals[c.id];
+              return `
+                <div class="study-card ${done ? "mastered" : ""}">
+                  <div class="sc-header">
+                    <div>
+                      <div class="sc-sub">${c.tipus}</div>
+                      <div class="sc-title">${c.nom}</div>
+                    </div>
+                    <span style="font-size:1.3rem;">${done ? "✅" : "📍"}</span>
+                  </div>
+                  <div class="capital-box" onclick="nav.hiddenCapitals['${c.id}']=!nav.hiddenCapitals['${c.id}']; render();">
+                    <span style="font-size:0.8rem; font-weight:700; color:var(--gold-dark);">Capital:</span>
+                    ${hid ? `<span class="capital-mask">👁️ Toca per veure</span>` : `<span class="capital-val">${c.capital}</span>`}
+                  </div>
+                  <div class="trick-box"><span>💡</span><div>${c.truc}</div></div>
+                  <button class="btn-master ${done ? "active" : ""}" onclick="toggleMaster('com','${c.id}')">
+                    ${done ? "✓ Apresa!" : "Marcar com a apresa"}
+                  </button>
+                </div>
+              `;
+            }).join("")}
+          `;
+        } else if (nav.tab === "map") {
+          body = renderMapBlock();
+        }
+
+        root.innerHTML = `
+          <div class="tabs-bar">
+            <button class="tab-btn ${nav.tab === "study" ? "active" : ""}" onclick="nav.tab='study'; render();">📖 Fitxes (19)</button>
+            <button class="tab-btn ${nav.tab === "map" ? "active" : ""}" onclick="nav.tab='map'; render();">🗺️ Mapa</button>
+            <button class="tab-btn" onclick="startQuiz('com', 35, 'Test Fase 1: Comunitats')">🎯 Test (35)</button>
+          </div>
+          ${body}
+        `;
+        return;
+      }
+
+      if (nav.view === "fase2") {
+        const filteredProvs = nav.provFilter === "all"
+          ? PROVINCIES
+          : PROVINCIES.filter(p => p.comId === nav.provFilter);
+
+        const multiComs = COMUNITATS.filter(c => c.tipus === "Comunitat");
+
+        root.innerHTML = `
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+            <button class="btn-primary" style="background:var(--emerald);" onclick="startQuiz('prov', 50, 'Test 50 Províncies')">
+              🎯 Test 50 Preguntes
+            </button>
+            <button class="btn-primary" style="background:var(--purple);" onclick="startQuiz('prov', 100, 'Marató 100 Províncies')">
+              🚀 Marató 100 Preguntes
+            </button>
+          </div>
+
+          <div class="filter-row">
+            <button class="filter-chip ${nav.provFilter === "all" ? "active" : ""}" onclick="nav.provFilter='all'; render();">Totes (50)</button>
+            ${multiComs.map(c => `
+              <button class="filter-chip ${nav.provFilter === c.id ? "active" : ""}" onclick="nav.provFilter='${c.id}'; render();">${c.nom}</button>
+            `).join("")}
+          </div>
+
+          ${filteredProvs.map(p => {
+            const done = state.masteredProvs.includes(p.id);
+            const hid = !!nav.hiddenCapitals[p.id];
+            const diffCap = p.nom !== p.capital;
+            return `
+              <div class="study-card ${done ? "mastered" : ""}">
+                <div class="sc-header">
+                  <div>
+                    <div class="sc-sub">Comunitat: ${p.comNom}</div>
+                    <div class="sc-title">${p.nom}</div>
+                  </div>
+                  ${diffCap ? `<span style="background:var(--crimson-light); color:var(--crimson); font-size:0.72rem; font-weight:800; padding:4px 8px; border-radius:8px;">⚠️ Capital diferent</span>` : ""}
+                </div>
+                <div class="capital-box" onclick="nav.hiddenCapitals['${p.id}']=!nav.hiddenCapitals['${p.id}']; render();">
+                  <span style="font-size:0.8rem; font-weight:700; color:var(--gold-dark);">Capital de província:</span>
+                  ${hid ? `<span class="capital-mask">👁️ Toca per veure</span>` : `<span class="capital-val">${p.capital}</span>`}
+                </div>
+                <div class="trick-box"><span>💡</span><div>${p.truc}</div></div>
+                <button class="btn-master ${done ? "active" : ""}" onclick="toggleMaster('prov','${p.id}')">
+                  ${done ? "✓ Apresa!" : "Marcar com a apresa"}
+                </button>
+              </div>
+            `;
+          }).join("")}
+        `;
+        return;
+      }
+
+      if (nav.view === "quiz") {
+        const q = nav.quiz;
+        if (q.finished) {
+          const total = q.survival ? q.score : q.questions.length;
+          return root.innerHTML = `
+            <div class="result-card">
+              <div style="font-size:3.8rem;">${q.survival ? "❤️‍🔥" : "🏆"}</div>
+              <h2 style="font-size:1.5rem; font-weight:900; margin-top:8px;">
+                ${q.survival ? "Fi de la partida!" : "Test Completat!"}
+              </h2>
+              <div class="result-score">${q.survival ? `${q.score} encerts` : `${q.score} / ${total}`}</div>
+              <p style="color:var(--text-muted); margin-bottom:20px;">
+                Cada pregunta encertada suma +10 estrelles i marca la comunitat o província com a apresa.
+              </p>
+              <button class="btn-primary" onclick="startQuiz('${q.scope}', ${q.questions.length}, '${q.title.replace(/'/g, "\\'")}', ${q.survival})">
+                🔄 Fer un altre test igual (preguntes noves)
+              </button>
+              <button class="btn-secondary" onclick="goHome()">🏠 Tornar al menú principal</button>
+            </div>
+          `;
+        }
+
+        const curr = q.questions[q.index];
+        const total = q.questions.length;
+        const pct = q.survival ? 100 : Math.round((q.index / total) * 100);
+        const hearts = "❤️".repeat(Math.max(0, q.lives)) + "🖤".repeat(Math.max(0, 3 - q.lives));
+
+        root.innerHTML = `
+          <div class="quiz-container">
+            <div class="quiz-top-bar">
+              <span>${q.survival ? `Encerts: ${q.score}` : `Pregunta ${q.index + 1} de ${total}`}</span>
+              ${q.survival
+                ? `<span class="lives-badge">${hearts}</span>`
+                : (q.streak >= 2 ? `<span class="streak-badge">🔥 Ratxa: ${q.streak}</span>` : `<span>Encerts: ${q.score}</span>`)}
+            </div>
+
+            <div class="quiz-progress-track">
+              <div class="quiz-progress-fill" style="width:${pct}%"></div>
+            </div>
+
+            <div class="question-type-tag">${curr.tag}</div>
+            <div class="question-text">${curr.promptHtml}</div>
+
+            <div class="options-grid">
+              ${curr.options.map(opt => {
+                let cls = "";
+                let icon = "";
+                if (q.answered) {
+                  if (opt === curr.correct) { cls = "correct"; icon = "✅"; }
+                  else if (opt === q.selected) { cls = "wrong"; icon = "❌"; }
+                }
+                const safe = opt.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+                return `
+                  <button class="option-btn ${cls}" ${q.answered ? "disabled" : ""} onclick="submitQuizAnswer('${safe}')">
+                    <span>${opt}</span>
+                    <span>${icon}</span>
+                  </button>
+                `;
+              }).join("")}
+            </div>
+
+            ${q.answered ? `
+              <div class="feedback-panel ${q.isCorrect ? "is-correct" : "is-wrong"}">
+                ${q.isCorrect ? "🌟 Correcte! +10 punts" : `❌ Incorrecte. Resposta correcta: ${curr.correct}`}
+              </div>
+              <button class="btn-primary" onclick="nextQuizStep()">
+                ${(q.survival && q.lives <= 0) || (!q.survival && q.index + 1 >= total) ? "Veure resultat 🏆" : "Següent pregunta →"}
+              </button>
+            ` : ""}
+          </div>
+        `;
+      }
+    }
+
+    function toggleMaster(type, id) {
+      const arr = type === "com" ? state.masteredComs : state.masteredProvs;
+      const idx = arr.indexOf(id);
+      if (idx === -1) {
+        arr.push(id);
+        state.points += 5;
+      } else {
+        arr.splice(idx, 1);
+      }
+      saveState();
+      render();
+    }
+
+    document.getElementById("btn-back").addEventListener("click", goHome);
+    document.getElementById("btn-cancel-reset").addEventListener("click", () => {
+      document.getElementById("reset-modal").classList.add("hidden");
+    });
+    document.getElementById("btn-confirm-reset").addEventListener("click", () => {
+      state = { masteredComs: [], masteredProvs: [], points: 0, bestSurvival: 0 };
+      saveState();
+      document.getElementById("reset-modal").classList.add("hidden");
+      goHome();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      render();
+    });
+  </script>
+</body>
+</html>
